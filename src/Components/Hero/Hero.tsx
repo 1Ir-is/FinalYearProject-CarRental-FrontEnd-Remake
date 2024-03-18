@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
+import aboutImg from "../../assets/all-images/cars-img/bmw-offer.png";
 
 import Helmet from "../Helmet/Helmet";
 
@@ -44,7 +45,7 @@ const Hero = (props: Props) => {
         </div>
       </section>
       {/* =========== about section ================ */}
-      <AboutSection />
+      <AboutSection aboutClass={""} />
       {/* ========== services section ============ */}
       <section>
         <Container>
