@@ -66,4 +66,5 @@ const AboutSection = ({ aboutClass }) => {
   );
 };
 
+
 export default AboutSection;
