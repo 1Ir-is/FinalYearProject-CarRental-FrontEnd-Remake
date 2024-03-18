@@ -1,8 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Container, Row, Col } from "reactstrap";
 
 import Helmet from "../Helmet/Helmet";
+
 import HeroSlider from "../../UI/HeroSlider/HeroSlider";
+import FindCarForm from "../../UI/FindCarForm/FindCarForm";
+import AboutSection from "../../UI/AboutSection/AboutSection";
+import CarItem from "../../UI/CarItem/CarItem";
+import ServicesList from "../../UI/ServiceList/ServiceList";
+import BecomeDriverSection from "../../UI/BecomeDriverSection/BecomeDriveSection";
+import Testimonial from "../../UI/Testimonial/Testimonial";
+import BlogList from "../../UI/BlogList/BlogList";
+
+import carData from "../../assets/data/carData";
+
 
 import "./Hero.css";
 
@@ -47,20 +59,9 @@ const Hero = (props: Props) => {
         </Container>
       </section>
       {/* =========== car offer section ============= */}
-      <section>
-        <Container>
-          <Row>
-            <Col lg="12" className="text-center mb-5">
-              <h6 className="section__subtitle">Come with</h6>
-              <h2 className="section__title">Hot Offers</h2>
-            </Col>
-
-            {carData.slice(0, 6).map((item) => (
-              <CarItem item={item} key={item.id} />
-            ))}
-          </Row>
-        </Container>
-      </section>
+      {carData.slice(0, 6).map((item) => (
+        <CarItem key={item.id} {...item} />
+      ))}
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />
 
