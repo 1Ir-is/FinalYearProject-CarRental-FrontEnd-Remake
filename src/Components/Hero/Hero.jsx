@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
 import { Container, Row, Col } from "reactstrap";
-import aboutImg from "../../assets/all-images/cars-img/bmw-offer.png";
+
 
 import Helmet from "../Helmet/Helmet";
 
@@ -19,9 +19,8 @@ import carData from "../../assets/data/carData";
 
 import "./Hero.css";
 
-interface Props {}
 
-const Hero = (props: Props) => {
+const Hero = () => {
   return (
     <Helmet title="Home">
       {/* ============= hero section =========== */}
@@ -45,7 +44,7 @@ const Hero = (props: Props) => {
         </div>
       </section>
       {/* =========== about section ================ */}
-      <AboutSection aboutClass={""} />
+      <AboutSection />
       {/* ========== services section ============ */}
       <section>
         <Container>
@@ -60,9 +59,20 @@ const Hero = (props: Props) => {
         </Container>
       </section>
       {/* =========== car offer section ============= */}
-      {carData.slice(0, 6).map((item) => (
-        <CarItem key={item.id} {...item} />
-      ))}
+      <section>
+        <Container>
+          <Row>
+            <Col lg="12" className="text-center mb-5">
+              <h6 className="section__subtitle">Come with</h6>
+              <h2 className="section__title">Hot Offers</h2>
+            </Col>
+
+            {carData.slice(0, 6).map((item) => (
+              <CarItem item={item} key={item.id} />
+            ))}
+          </Row>
+        </Container>
+      </section>
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />
 

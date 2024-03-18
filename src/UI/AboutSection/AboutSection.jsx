@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import "../../styles/about-section.css";
+import "./AboutSection.css";
 import aboutImg from "../../assets/all-images/cars-img/bmw-offer.png";
 import "./AboutSection.css";
 
