@@ -1,8 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
-import "./Navbar.css";
+import avatar from "./avatar-1.png";
 import { useAuth } from "../../Context/useAuth";
+import AccountMenu from "../AccountMenu/AccountMenu";
+
+import "./Navbar.css";
 
 interface Props {}
 
@@ -40,6 +43,8 @@ const Navbar = (props: Props) => {
       menuRef.current.classList.toggle("menu__active");
     }
   };
+
+
   return (
 
     <header className="header">
@@ -57,34 +62,27 @@ const Navbar = (props: Props) => {
             </Col>
 
             <Col lg="6" md="6" sm="6">
-  
-              {isLoggedIn() ? (
-                <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-                  <Link to="/profile">
-                    <img src="user-avatar.png" alt="User Avatar" />
-                  </Link>
-                  <Link to="#" onClick={logout}>
-                    Logout
-                  </Link>
-                </div>
-              ) : (
-                <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-                  <Link to="/login" className=" d-flex align-items-center gap-1">
-                    <i className="ri-login-circle-line"></i> Login
-                  </Link>
+            {isLoggedIn() ? (   
+             <div className="right-0 d-flex align-items-center justify-content-end gap-3">
+                <AccountMenu />
+                <div>Welcome, {user?.email}</div>
+              </div>     
+            ) : (
+              <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
+                <Link to="/login" className="d-flex align-items-center gap-1">
+                  <i className="ri-login-circle-line"></i> Login
+                </Link>
+                <Link to="/register" className="d-flex align-items-center gap-1">
+                  <i className="ri-user-line"></i> Register
+                </Link>
+              </div>
+            )}
 
-                  <Link to="/register" className=" d-flex align-items-center gap-1">
-                    <i className="ri-user-line"></i> Register
-                  </Link>
-                </div>
-              )}
             </Col>
-
-
           </Row>
         </Container>
       </div>
-
+      
       {/* =============== header middle =========== */}
       <div className="header__middle">
         <Container>
@@ -179,10 +177,6 @@ const Navbar = (props: Props) => {
         </Container>
       </div>
     </header>
-
-
-        
-
   );
 };
 

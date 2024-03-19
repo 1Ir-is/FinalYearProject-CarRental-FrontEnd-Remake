@@ -11,6 +11,7 @@ import Blog from "../Pages/BlogPage/BlogPage";
 import BlogDetails from "../UI/BlogDetails/BlogDetails";
 import Contact from "../Pages/ContactPage/ContactPage";
 
+
 import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: "blogs", element: <Blog /> },
       { path: "blogs/:slug", element: <BlogDetails /> },
       { path: "contact", element: <Contact /> },
+      // { path: "profile", element: <ProfilePage /> },
       // {
       //   path: "home",
       //   element: (

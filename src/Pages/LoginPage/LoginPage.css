@@ -1,5 +1,9 @@
 .login-section {
     padding: 50px 0;
+    background-image: url('../../assets/all-images/car1.jpg'); /* Change 'your-background-image.jpg' to your actual image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   
   .login-form {
