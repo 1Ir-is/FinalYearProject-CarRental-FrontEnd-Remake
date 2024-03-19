@@ -1,8 +1,10 @@
 import React from "react";
 import { Col } from "reactstrap";
-import "./BlogList.css";
 import { Link } from "react-router-dom";
+
 import blogData from "../../assets/data/blogData";
+
+import "./BlogList.css";
 
 const BlogList = () => {
   return (

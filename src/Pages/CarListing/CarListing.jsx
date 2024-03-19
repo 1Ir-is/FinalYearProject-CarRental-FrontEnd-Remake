@@ -17,10 +17,10 @@ const CarListing = () => {
               <div className=" d-flex align-items-center gap-3 mb-5">
                 
                 <span className=" d-flex align-items-center gap-2">
-                  <i class="ri-sort-asc"></i> Sort By
+                  <i className="ri-sort-asc"></i> Sort By
                 </span>
 
-                <select>
+                <select className="box-border h-10 w-32 border-2">
                   <option>Select</option>
                   <option value="low">Low to High</option>
                   <option value="high">High to Low</option>

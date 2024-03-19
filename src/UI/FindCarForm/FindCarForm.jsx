@@ -1,7 +1,7 @@
 import React from "react";
-import "./FindCarForm.css";
-
 import { Form, FormGroup } from "reactstrap";
+
+import "./FindCarForm.css";
 
 const FindCarForm = () => {
   return (

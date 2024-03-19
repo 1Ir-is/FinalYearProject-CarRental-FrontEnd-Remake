@@ -1,7 +1,9 @@
 import React from "react";
 import { Col } from "reactstrap";
-import "./ServiceList.css";
+
 import servicesData from "../../assets/data/serviceData";
+
+import "./ServiceList.css";
 
 const ServicesList = () => {
   return (

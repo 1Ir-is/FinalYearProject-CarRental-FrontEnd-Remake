@@ -1,7 +1,7 @@
 import React from "react";
-import "./BecomeDriverSection.css";
 import { Container, Row, Col } from "reactstrap";
 
+import "./BecomeDriverSection.css";
 import driverImg from "../../assets/all-images/toyota-offer-2.png";
 
 const BecomeDriverSection = () => {

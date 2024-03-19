@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import logo from "./logo.png";
 import { Container, Row, Col } from "reactstrap";
 import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css";
@@ -110,7 +109,7 @@ const Navbar = (props: Props) => {
                 </span>
                 <div className="header__location-content">
                   <h4>Viet Nam</h4>
-                  <h6>Da Nang city, Viet Nam</h6>
+                  <h6 className="text-indigo-900">Da Nang city, Viet Nam</h6>
                 </div>
               </div>
             </Col>
@@ -122,7 +121,7 @@ const Navbar = (props: Props) => {
                 </span>
                 <div className="header__location-content">
                   <h4>Sunday to Friday</h4>
-                  <h6>10am - 7pm</h6>
+                  <h6 className="text-indigo-900">10am - 7pm</h6>
                 </div>
               </div>
             </Col>

@@ -1,10 +1,11 @@
 import React from "react";
-import "./OurMembers.css";
 import { Col } from "reactstrap";
 import { Link } from "react-router-dom";
+
 import ava01 from "../../assets/all-images/ava-1.jpg";
 import ava02 from "../../assets/all-images/ava-2.jpg";
 import ava03 from "../../assets/all-images/ava-3.jpg";
+import "./OurMembers.css";
 
 const OUR__MEMBERS = [
   {
