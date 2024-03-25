@@ -65,7 +65,7 @@ const Navbar = (props: Props) => {
             {isLoggedIn() ? (   
              <div className="right-0 d-flex align-items-center justify-content-end gap-3">
                 <AccountMenu />
-                <div>Welcome, {user?.email}</div>
+                <div className="hover:text-darkBlue">Welcome, {user?.name}</div>
               </div>     
             ) : (
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
