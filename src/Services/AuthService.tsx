@@ -32,3 +32,20 @@ export const registerAPI = async (
   }
 };
 
+export const editUserAPI = async (formData: FormData) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const data = await axios.post<UserProfileToken>(api + "User/edit-info", formData, config);
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+
