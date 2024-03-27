@@ -2,6 +2,8 @@ export type UserProfileToken = {
   userId: number; // Adjust the data type as needed
   email: string;
   name: string; // Added name property
+  address: string;
+  phone: string;
   token: string;
 };
 

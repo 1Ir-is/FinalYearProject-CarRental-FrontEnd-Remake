@@ -12,9 +12,10 @@ type UserContextType = {
   token: string | null;
   registerUser: (email: string, name: string, password: string) => void;
   loginUser: (email: string, password: string) => void;
-  editUser: (formData: FormData) => void; // Added editUser function
+  editUser: (formData: FormData) => void;
   logout: () => void;
   isLoggedIn: () => boolean;
+  setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>; // Add setUser function
 };
 
 type Props = { children: React.ReactNode };
@@ -62,26 +63,29 @@ export const UserProvider = ({ children }: Props) => {
       .catch((e) => toast.warning("Server error occurred"));
   };
 
-  const loginUser = async (email: string, password: string) => {
-    await loginAPI(email, password)
-      .then((res) => {
-        if (res) {
-          localStorage.setItem("token", res?.data.token);
-          const userObj: UserProfile = {
-            userId: res?.data.userId, // Make sure userId is correctly set
-            name: res?.data.name,
-            email: res?.data.email,
-            // Other properties...
-          };
-          localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
-          setUser(userObj!);
-          toast.success("Login Success!");
-          navigate("/home");
-        }
-      })
-      .catch((e) => toast.warning("Server error occurred"));
-  };
+// Inside your login component or wherever you handle the login logic
+const loginUser = async (email: string, password: string) => {
+  await loginAPI(email, password)
+    .then((res) => {
+      if (res) {
+        localStorage.setItem("token", res?.data.token);
+        const userObj: UserProfile = {
+          userId: res?.data.userId,
+          name: res?.data.name,
+          email: res?.data.email,
+          address: res?.data.address, // Include the address
+          phone: res?.data.phone, // Include the phone number
+          // Other user properties...
+        };
+        localStorage.setItem("user", JSON.stringify(userObj));
+        setToken(res?.data.token!);
+        setUser(userObj!); // Set the user object in the context
+        toast.success("Login Success!");
+        navigate("/home");
+      }
+    })
+    .catch((e) => toast.warning("Server error occurred"));
+};
   
   
 
@@ -110,9 +114,11 @@ export const UserProvider = ({ children }: Props) => {
           // Update other properties as necessary
         };
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log("User information updated successfully!", user);
   
         // Handle success
         toast.success("User information updated successfully!");
+        navigate("/profile");
       }
     } catch (error) {
       // Handle error
@@ -137,7 +143,16 @@ export const UserProvider = ({ children }: Props) => {
 
   return (
     <UserContext.Provider
-      value={{ loginUser, user, token, logout, isLoggedIn, registerUser, editUser }}
+      value={{
+        user,
+        token,
+        registerUser,
+        loginUser,
+        editUser,
+        logout,
+        isLoggedIn,
+        setUser, // Include setUser in the context value
+      }}
     >
       {isReady ? children : null}
     </UserContext.Provider>
