@@ -18,6 +18,11 @@
     color: #fff;
     line-height: 65px;
   }
+
+  .become__driver button:hover {
+    background: #fff; /* Set the background color to the same as the default */
+    color: #000d6b; /* Set the text color to the same as the default */
+  }
   
   @media only screen and (max-width: 992px) {
     .become__driver-title {
