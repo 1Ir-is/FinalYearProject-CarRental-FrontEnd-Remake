@@ -17,7 +17,12 @@ type LoginFormsInputs = {
 
 const validation = Yup.object().shape({
   Email: Yup.string().required("Email is required"),
-  password: Yup.string().required("Password is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/,
+      "Password contain at least one uppercase letter, and at least one numeric digit"
+    ),
 });
 
 const LoginPage = (props: Props) => {

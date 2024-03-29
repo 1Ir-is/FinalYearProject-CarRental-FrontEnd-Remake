@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { useAuth } from '../../Context/useAuth';
+import { toast } from 'react-toastify'; 
 import axios from 'axios';
 
 import './ProfilePage.css';
@@ -54,6 +55,9 @@ const ProfilePage = () => {
       setUser(editedUserData);
 
       console.log('Edit user response:', response.data);
+
+       // Show toast notification for successful update
+      toast.success('Profile updated successfully');
     } catch (error) {
       console.error('Error editing user:', error);
     }
