@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import carImage from '../../assets/all-images/pexels-may-dayua-1545743.jpg';
 
 const OwnerPage = () => {
@@ -12,12 +13,36 @@ const OwnerPage = () => {
         identity: '',
         type: '0'
     });
+    const [isApproving, setIsApproving] = useState(false);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        const fetchIsApproving = async () => {
+            try {
+                // Make a GET request to the backend API endpoint to check if the user is approving
+                const response = await axios.get(`https://localhost:7228/api/User/is-approving/1`); // Replace 1 with the current user's ID
+                setIsApproving(response.data.isApproving);
+            } catch (error) {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            }
+        };
+
+        fetchIsApproving();
+    }, []);
+
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission here
-        console.log('Form submitted:', formData);
+        try {
+            const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/1`, formData);
+            console.log('Response:', response.data);
+            setIsApproving(true);
+            alert('Approval application created successfully');
+        } catch (error) {
+            console.error('Error:', error.response ? error.response.data : error.message);
+            alert('Error creating approval application');
+        }
     };
+
 
     return (
         <div className="container">
@@ -31,6 +56,12 @@ const OwnerPage = () => {
                                 </div>
                                 <div className="col-lg-6">
                                     <div className="p-5">
+                                        <div className="text-center">
+                                            <h1 className="h4 text-gray-900 mb-4">
+                                            {isApproving ? "Pending Approval!" : "Register to be our partner!"}
+                                            </h1>
+                                        </div>
+                                        {!isApproving && (
                                             <form className="user" onSubmit={handleSubmit}>
                                                 <div className="form-group">
                                                     <label>Car Owner Name</label>
@@ -85,9 +116,21 @@ const OwnerPage = () => {
                                                     <input
                                                         style={{ width: '100%' }}
                                                         type="text"
-                                                        name="address"
-                                                        value={formData.address}
-                                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                                        name="title"
+                                                        value={formData.title}
+                                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                                        className="form-control form-control-user"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="form-group mt-3">
+                                                    <label>Nội dung</label>
+                                                    <input
+                                                        style={{ width: '100%' }}
+                                                        type="text"
+                                                        name="description"
+                                                        value={formData.description}
+                                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                                         className="form-control form-control-user"
                                                         required
                                                     />
@@ -97,9 +140,9 @@ const OwnerPage = () => {
                                                     <input
                                                         style={{ width: '100%' }}
                                                         type="text"
-                                                        name="address"
-                                                        value={formData.address}
-                                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                                        name="identity"
+                                                        value={formData.identity}
+                                                        onChange={(e) => setFormData({ ...formData, identity: e.target.value })}
                                                         className="form-control form-control-user"
                                                         required
                                                     />
@@ -118,12 +161,11 @@ const OwnerPage = () => {
                                                         <option value="1">Company</option>
                                                     </select>
                                                 </div>
-
                                                 <button type="submit" className="btn btn-primary btn-user btn-block mt-3">
                                                     Register
                                                 </button>
                                             </form>
-                                        
+                                        )}
                                         <hr />
                                     </div>
                                 </div>
