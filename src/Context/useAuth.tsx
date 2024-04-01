@@ -44,25 +44,23 @@ export const UserProvider = ({ children }: Props) => {
     name: string,
     password: string
   ) => {
-    await registerAPI(email, name, password)
-      .then((res) => {
-        if (res) {
-          localStorage.setItem("token", res?.data.token);
-          const userObj: UserProfile = {
-            userId: res?.data.userId,
-            name: res?.data.name,
-            email: res?.data.email,
-            role: res?.data.role, // Include the role property
-          };
-          localStorage.setItem("user", JSON.stringify(userObj));
-          setToken(res?.data.token!);
-          setUser(userObj!);
-          toast.success("Register Success!");
-          navigate("/login");
-        }
-      })
-      .catch((e) => toast.warning("Server error occurred"));
+    try {
+      const res = await registerAPI(email, name, password);
+      if (res) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setToken(null);
+        setUser(null);
+        toast.success("Register Success!");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error registering user:", error);
+      toast.error("Failed to register user. Please try again.");
+    }
   };
+  
+  
 
   const loginUser = async (email: string, password: string) => {
     await loginAPI(email, password)

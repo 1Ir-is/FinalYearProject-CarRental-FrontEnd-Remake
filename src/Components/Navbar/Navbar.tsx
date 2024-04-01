@@ -34,7 +34,7 @@ const navLinks = [
 ];
 
 const Navbar = (props: Props) => {
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const menuRef = useRef<HTMLDivElement>(null); // Add type assertion for menuRef
 
@@ -62,22 +62,23 @@ const Navbar = (props: Props) => {
             </Col>
 
             <Col lg="6" md="6" sm="6">
-            {isLoggedIn() ? (   
-             <div className="right-0 d-flex align-items-center justify-content-end gap-3">
-                <AccountMenu />
-                <div className="hover:text-darkBlue">Welcome, {user?.name}</div>
-              </div>     
-            ) : (
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-                <Link to="/login" className="d-flex align-items-center gap-1">
-                  <i className="ri-login-circle-line"></i> Login
-                </Link>
-                <Link to="/register" className="d-flex align-items-center gap-1">
-                  <i className="ri-user-line"></i> Register
-                </Link>
+                {isLoggedIn() ? (
+                  <>
+                    <AccountMenu />
+                    <div className="hover:text-darkBlue">Welcome, {user?.name}</div>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login" className="d-flex align-items-center gap-1">
+                      <i className="ri-login-circle-line"></i> Login
+                    </Link>
+                    <Link to="/register" className="d-flex align-items-center gap-1">
+                      <i className="ri-user-line"></i> Register
+                    </Link>
+                  </>
+                )}
               </div>
-            )}
-
             </Col>
           </Row>
         </Container>
