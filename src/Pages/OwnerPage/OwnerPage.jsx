@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import carImage from '../../assets/all-images/pexels-may-dayua-1545743.jpg';
+import { useAuth } from "../../Context/useAuth"; // Import the useAuth hook
 
 const OwnerPage = () => {
+    const { user } = useAuth(); // Destructure user object from useAuth context
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -16,33 +18,58 @@ const OwnerPage = () => {
     const [isApproving, setIsApproving] = useState(false);
 
     useEffect(() => {
-        const fetchIsApproving = async () => {
-            try {
-                // Make a GET request to the backend API endpoint to check if the user is approving
-                const response = await axios.get(`https://localhost:7228/api/User/is-approving/1`); // Replace 1 with the current user's ID
-                setIsApproving(response.data.isApproving);
-            } catch (error) {
-                console.error('Error:', error.response ? error.response.data : error.message);
-            }
-        };
+        // Check local storage for approval status on component mount
+        const approvalStatus = localStorage.getItem(`approvalStatus_${user?.userId}`);
+        if (approvalStatus === 'true') {
+            setIsApproving(true);
+        }
 
-        fetchIsApproving();
-    }, []);
+        // Fetch approval status from the server only if user is logged in
+        if (user) {
+            fetchIsApproving();
+        }
+    }, [user]); // Add user to the dependency array
 
+    const fetchIsApproving = async () => {
+        try {
+            // Retrieve userId from the user object in useAuth context
+            const userId = user ? user.userId : null;
+            console.log('userId:', userId);
+            const response = await axios.get(`https://localhost:7228/api/User/is-approving/${userId}`);
+            console.log('Response:', response.data);
+            setIsApproving(response.data.isApproving);
+
+            // Update local storage with approval status specific to the user
+            localStorage.setItem(`approvalStatus_${userId}`, response.data.isApproving);
+        } catch (error) {
+            console.error('Error:', error.response ? error.response.data : error.message);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/1`, formData);
+            // Retrieve userId from the user object in useAuth context
+            const userId = user ? user.userId : null;
+            console.log('userId:', userId);
+            const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/${userId}`, formData);
             console.log('Response:', response.data);
             setIsApproving(true);
             alert('Approval application created successfully');
+
+            // Update local storage with approval status specific to the user
+            localStorage.setItem(`approvalStatus_${userId}`, true);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
+            if (error.response && error.response.data.errors) {
+                // Handle validation errors
+                const validationErrors = error.response.data.errors;
+                console.log('Validation Errors:', validationErrors);
+                // Update form inputs or display error messages as needed
+            }
             alert('Error creating approval application');
         }
     };
-
 
     return (
         <div className="container">
@@ -58,7 +85,7 @@ const OwnerPage = () => {
                                     <div className="p-5">
                                         <div className="text-center">
                                             <h1 className="h4 text-gray-900 mb-4">
-                                            {isApproving ? "Pending Approval!" : "Register to be our partner!"}
+                                                {isApproving ? "Pending Approval!" : "Register to be our partner!"}
                                             </h1>
                                         </div>
                                         {!isApproving && (
@@ -112,7 +139,7 @@ const OwnerPage = () => {
                                                     />
                                                 </div>
                                                 <div className="form-group mt-3">
-                                                    <label>Description</label>
+                                                    <label>Title</label>
                                                     <input
                                                         style={{ width: '100%' }}
                                                         type="text"
@@ -124,7 +151,7 @@ const OwnerPage = () => {
                                                     />
                                                 </div>
                                                 <div className="form-group mt-3">
-                                                    <label>Nội dung</label>
+                                                    <label>Description</label>
                                                     <input
                                                         style={{ width: '100%' }}
                                                         type="text"
@@ -136,7 +163,7 @@ const OwnerPage = () => {
                                                     />
                                                 </div>
                                                 <div className="form-group mt-3">
-                                                    <label>Tax Code</label>
+                                                    <label>Identity</label>
                                                     <input
                                                         style={{ width: '100%' }}
                                                         type="text"
