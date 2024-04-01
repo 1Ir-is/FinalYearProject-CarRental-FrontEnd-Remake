@@ -63,6 +63,20 @@ const ProfilePage = () => {
     }
   };
 
+  // Function to get user role based on role code
+  const getUserRole = (role) => {
+    switch (role) {
+      case 0:
+        return 'Admin';
+      case 1:
+        return 'User';
+      case 3:
+        return 'Owner';
+      default:
+        return 'Unknown';
+    }
+  };
+
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <nav className="nav nav-borders">
@@ -90,8 +104,8 @@ const ProfilePage = () => {
                     <input className="form-control" id="fullName" name="name" type="text" placeholder="Enter your name" value={formData.name} onChange={handleInputChange} />
                   </div>
                   <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="userName">Role</label>
-                    <p>{user?.role}</p>
+                    <label className="small mb-1" htmlFor="role">Role</label>
+                    <p>{getUserRole(user.role)}</p> {/* Display user role */}
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
@@ -110,7 +124,7 @@ const ProfilePage = () => {
                     <input className="form-control" id="email" type="email" name="email" placeholder="Enter your email" value={user.email} readOnly />
                   </div>
                   <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="Facebook">Trust score</label>
+                    <label className="small mb-1" htmlFor="trustPoint">Trust score</label>
                     <span>{user.trustPoint}</span>
                   </div>
                 </div>

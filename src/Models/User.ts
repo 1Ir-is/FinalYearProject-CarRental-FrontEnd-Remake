@@ -5,14 +5,15 @@ export type UserProfileToken = {
   address: string;
   phone: string;
   token: string;
+  role: number; // Add role property
 };
 
 export interface UserProfile {
   userId?: number;
   name?: string;
   email?: string;
-  phone?: string; // Define phone as an optional property
-  address?: string; // Define address as an optional property
-  // Other properties...
+  phone?: string;
+  address?: string;
+  role?: number; // Add role property
 }
 
