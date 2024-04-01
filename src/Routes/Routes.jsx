@@ -32,14 +32,14 @@ export const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "profile", element: <ProfilePage /> },
       { path: "register-owner", element: <OwnerPage /> },
-      // {
-      //   path: "home",
-      //   element: (
-      //     <ProtectedRoute>
-      //       <HomePage/>
-      //     </ProtectedRoute>
-      //   ),
-      // },
+      {
+        path: "register-owner",
+        element: (
+          <ProtectedRoute>
+            <OwnerPage/>
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);

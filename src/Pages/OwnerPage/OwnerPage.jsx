@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import carImage from '../../assets/all-images/pexels-may-dayua-1545743.jpg';
-import { useAuth } from "../../Context/useAuth"; // Import the useAuth hook
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Context/useAuth'; // Import the useAuth hook
+import Swal from 'sweetalert2';
 
 const OwnerPage = () => {
     const { user } = useAuth(); // Destructure user object from useAuth context
@@ -16,38 +18,41 @@ const OwnerPage = () => {
         type: '0'
     });
     const [isApproving, setIsApproving] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Check local storage for approval status on component mount
-        const approvalStatus = localStorage.getItem(`approvalStatus_${user?.userId}`);
-        if (approvalStatus === 'true') {
-            setIsApproving(true);
-        }
+        const fetchIsApproving = async () => {
+            try {
+                // Retrieve userId from the user object in useAuth context
+                const userId = user ? user.userId : null;
+                console.log('userId:', userId);
+                const response = await axios.get(`https://localhost:7228/api/User/is-approving/${userId}`);
+                console.log('Response:', response.data);
+                setIsApproving(response.data.isApproving);
+            } catch (error) {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            }
+        };
 
-        // Fetch approval status from the server only if user is logged in
-        if (user) {
-            fetchIsApproving();
-        }
+        fetchIsApproving();
     }, [user]); // Add user to the dependency array
-
-    const fetchIsApproving = async () => {
-        try {
-            // Retrieve userId from the user object in useAuth context
-            const userId = user ? user.userId : null;
-            console.log('userId:', userId);
-            const response = await axios.get(`https://localhost:7228/api/User/is-approving/${userId}`);
-            console.log('Response:', response.data);
-            setIsApproving(response.data.isApproving);
-
-            // Update local storage with approval status specific to the user
-            localStorage.setItem(`approvalStatus_${userId}`, response.data.isApproving);
-        } catch (error) {
-            console.error('Error:', error.response ? error.response.data : error.message);
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!user) {
+            // If user is not logged in, display a modal
+            Swal.fire({
+                title: 'You need to login before register to be our partner!',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirect to login page
+                    navigate('/login');
+                }
+            });
+            return;
+        }
         try {
             // Retrieve userId from the user object in useAuth context
             const userId = user ? user.userId : null;
@@ -56,9 +61,6 @@ const OwnerPage = () => {
             console.log('Response:', response.data);
             setIsApproving(true);
             alert('Approval application created successfully');
-
-            // Update local storage with approval status specific to the user
-            localStorage.setItem(`approvalStatus_${userId}`, true);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
             if (error.response && error.response.data.errors) {
@@ -67,10 +69,9 @@ const OwnerPage = () => {
                 console.log('Validation Errors:', validationErrors);
                 // Update form inputs or display error messages as needed
             }
-            alert('Error creating approval application');
         }
     };
-
+    
     return (
         <div className="container">
             <div className="row justify-content-center">
