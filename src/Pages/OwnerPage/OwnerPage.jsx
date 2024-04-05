@@ -17,34 +17,31 @@ const OwnerPage = () => {
         identity: '',
         type: '0'
     });
-    const [isApproving, setIsApproving] = useState(false);
+    const [requestStatus, setRequestStatus] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchIsApproving = async () => {
+        const fetchRequestStatus = async () => {
             try {
                 const userId = user ? user.userId : null;
-                const response = await axios.get(`https://localhost:7228/api/User/is-approving/${userId}`);
-                setIsApproving(response.data.isApproving);
-                sessionStorage.setItem('isApproving', response.data.isApproving);
+                if (!userId) return; // Exit if user ID is not available
+                const response = await axios.get(`https://localhost:7228/api/User/check-approval/${userId}`);
+                const status = response.data.isApproving;
+                setRequestStatus(status);
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
             }
         };
-
-        const isApprovingStored = sessionStorage.getItem('isApproving');
-        if (isApprovingStored !== null) {
-            setIsApproving(isApprovingStored === 'true');
-        } else {
-            fetchIsApproving();
-        }
+    
+        fetchRequestStatus();
     }, [user]);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) {
             Swal.fire({
-                title: 'You need to login before register to be our partner!',
+                title: 'You need to login before registering to be our partner!',
                 icon: 'warning',
                 confirmButtonText: 'OK',
             }).then((result) => {
@@ -57,9 +54,13 @@ const OwnerPage = () => {
         try {
             const userId = user ? user.userId : null;
             const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/${userId}`, formData);
-            setIsApproving(true);
-            sessionStorage.setItem('isApproving', true);
+            sessionStorage.setItem('isApproving', true); // Store in sessionStorage
             alert('Approval application created successfully');
+            
+            // Fetch the updated request status
+            const statusResponse = await axios.get(`https://localhost:7228/api/User/check-approval/${userId}`);
+            const status = statusResponse.data.isApproving;
+            setRequestStatus(status);
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
             if (error.response && error.response.data.errors) {
@@ -69,6 +70,24 @@ const OwnerPage = () => {
         }
     };
     
+
+    let statusMessage;
+    switch (requestStatus) {
+        case 'Approved':
+            statusMessage = "Request Approved!";
+            break;
+        case 'Pending':
+            statusMessage = "Pending Approval!";
+            break;
+        case 'Rejected':
+            statusMessage = "Request Rejected!";
+            break;
+        default:
+            statusMessage = "Register to be our partner!";
+    }
+
+    const showForm = requestStatus !== 'Approved' && requestStatus !== 'Pending' && requestStatus !== 'Rejected';
+
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -83,10 +102,10 @@ const OwnerPage = () => {
                                     <div className="p-5">
                                         <div className="text-center">
                                             <h1 className="h4 text-gray-900 mb-4">
-                                                {isApproving ? "Pending Approval!" : "Register to be our partner!"}
+                                                {statusMessage}
                                             </h1>
                                         </div>
-                                        {!isApproving && (
+                                        {showForm && (
                                              <form className="user" onSubmit={handleSubmit}>
                                              <div className="form-group">
                                                  <label>Car Owner Name</label>
