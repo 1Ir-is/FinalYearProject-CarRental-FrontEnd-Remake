@@ -25,6 +25,10 @@ body {
   .card-header:first-child {
     border-radius: 0.35rem 0.35rem 0 0;
   }
+
+  .nav-link {
+    border: none; /* Remove border from nav links */
+  }
   
   .card-header {
     padding: 1rem 1.35rem;
