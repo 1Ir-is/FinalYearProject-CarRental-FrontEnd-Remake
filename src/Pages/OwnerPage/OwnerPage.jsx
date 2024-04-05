@@ -6,7 +6,7 @@ import { useAuth } from '../../Context/useAuth'; // Import the useAuth hook
 import Swal from 'sweetalert2';
 
 const OwnerPage = () => {
-    const { user } = useAuth(); // Destructure user object from useAuth context
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -23,51 +23,48 @@ const OwnerPage = () => {
     useEffect(() => {
         const fetchIsApproving = async () => {
             try {
-                // Retrieve userId from the user object in useAuth context
                 const userId = user ? user.userId : null;
-                console.log('userId:', userId);
                 const response = await axios.get(`https://localhost:7228/api/User/is-approving/${userId}`);
-                console.log('Response:', response.data);
                 setIsApproving(response.data.isApproving);
+                sessionStorage.setItem('isApproving', response.data.isApproving);
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
             }
         };
 
-        fetchIsApproving();
-    }, [user]); // Add user to the dependency array
+        const isApprovingStored = sessionStorage.getItem('isApproving');
+        if (isApprovingStored !== null) {
+            setIsApproving(isApprovingStored === 'true');
+        } else {
+            fetchIsApproving();
+        }
+    }, [user]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!user) {
-            // If user is not logged in, display a modal
             Swal.fire({
                 title: 'You need to login before register to be our partner!',
                 icon: 'warning',
                 confirmButtonText: 'OK',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirect to login page
                     navigate('/login');
                 }
             });
             return;
         }
         try {
-            // Retrieve userId from the user object in useAuth context
             const userId = user ? user.userId : null;
-            console.log('userId:', userId);
             const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/${userId}`, formData);
-            console.log('Response:', response.data);
             setIsApproving(true);
+            sessionStorage.setItem('isApproving', true);
             alert('Approval application created successfully');
         } catch (error) {
             console.error('Error:', error.response ? error.response.data : error.message);
             if (error.response && error.response.data.errors) {
-                // Handle validation errors
                 const validationErrors = error.response.data.errors;
                 console.log('Validation Errors:', validationErrors);
-                // Update form inputs or display error messages as needed
             }
         }
     };
@@ -90,109 +87,109 @@ const OwnerPage = () => {
                                             </h1>
                                         </div>
                                         {!isApproving && (
-                                            <form className="user" onSubmit={handleSubmit}>
-                                                <div className="form-group">
-                                                    <label>Car Owner Name</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="name"
-                                                        value={formData.name}
-                                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Phone Number</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="phone"
-                                                        value={formData.phone}
-                                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Email</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="email"
-                                                        name="email"
-                                                        value={formData.email}
-                                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Address</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="address"
-                                                        value={formData.address}
-                                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Title</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="title"
-                                                        value={formData.title}
-                                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Description</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="description"
-                                                        value={formData.description}
-                                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Identity</label>
-                                                    <input
-                                                        style={{ width: '100%' }}
-                                                        type="text"
-                                                        name="identity"
-                                                        value={formData.identity}
-                                                        onChange={(e) => setFormData({ ...formData, identity: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    />
-                                                </div>
-                                                <div className="form-group mt-3">
-                                                    <label>Type</label>
-                                                    <select
-                                                        style={{ width: '100%' }}
-                                                        name="type"
-                                                        value={formData.type}
-                                                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                                        className="form-control form-control-user"
-                                                        required
-                                                    >
-                                                        <option value="0">Individual</option>
-                                                        <option value="1">Company</option>
-                                                    </select>
-                                                </div>
-                                                <button type="submit" className="btn btn-primary btn-user btn-block mt-3">
-                                                    Register
-                                                </button>
-                                            </form>
+                                             <form className="user" onSubmit={handleSubmit}>
+                                             <div className="form-group">
+                                                 <label>Car Owner Name</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="name"
+                                                     value={formData.name}
+                                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Phone Number</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="phone"
+                                                     value={formData.phone}
+                                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Email</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="email"
+                                                     name="email"
+                                                     value={formData.email}
+                                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Address</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="address"
+                                                     value={formData.address}
+                                                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Title</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="title"
+                                                     value={formData.title}
+                                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Description</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="description"
+                                                     value={formData.description}
+                                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Identity</label>
+                                                 <input
+                                                     style={{ width: '100%' }}
+                                                     type="text"
+                                                     name="identity"
+                                                     value={formData.identity}
+                                                     onChange={(e) => setFormData({ ...formData, identity: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 />
+                                             </div>
+                                             <div className="form-group mt-3">
+                                                 <label>Type</label>
+                                                 <select
+                                                     style={{ width: '100%' }}
+                                                     name="type"
+                                                     value={formData.type}
+                                                     onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                                                     className="form-control form-control-user"
+                                                     required
+                                                 >
+                                                     <option value="0">Individual</option>
+                                                     <option value="1">Company</option>
+                                                 </select>
+                                             </div>
+                                             <button type="submit" className="btn btn-primary btn-user btn-block mt-3">
+                                                 Register
+                                             </button>
+                                         </form>
                                         )}
                                         <hr />
                                     </div>
