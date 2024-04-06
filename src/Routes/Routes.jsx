@@ -14,6 +14,8 @@ import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import OwnerPage from "../Pages/OwnerPage/OwnerPage";
 import RentedCarView from "../Pages/RentedCarViewPage/RentedCarView";
 import FavoriteVehicleList from "../Pages/FavoriteListPage/FavoriteList";
+import VehiclePost from "../Pages/VehiclePost/VehiclePost";
+import CreatePostPage from "../Pages/CreatePost/CreatePost";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -36,6 +38,8 @@ export const router = createBrowserRouter([
       { path: "rented-car", element: <RentedCarView /> },
       { path: "favorite-list", element: <FavoriteVehicleList /> },
       { path: "register-owner", element: <OwnerPage /> },
+      { path: "vehicle-post", element: <VehiclePost /> },
+      { path: "create-post", element: <CreatePostPage /> },
       {
         path: "register-owner",
         element: (

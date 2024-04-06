@@ -4,6 +4,7 @@ import { useAuth } from '../../Context/useAuth';
 import { toast } from 'react-toastify'; 
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
+import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 
 import './ProfilePage.css';
 
@@ -79,19 +80,8 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
-      <nav className="nav nav-borders">
-        <NavLink exact to="/profile" className="nav-link">
-          Profile
-        </NavLink>
-        <NavLink to="/rented-car" className="nav-link">
-          Car have been rented
-        </NavLink>
-        <NavLink to="/favorite-list" className="nav-link">
-          Favorite List
-        </NavLink>
-      </nav>
-
+    <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>  
+      <CustomNavLinks />
       <hr className="mt-0 mb-4" />
       <div className="row">
         <div className="col-xl-4">

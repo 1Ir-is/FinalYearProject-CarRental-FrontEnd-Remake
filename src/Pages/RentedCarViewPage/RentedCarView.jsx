@@ -2,23 +2,12 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./RentedCarView.css";
-import { NavLink } from "react-router-dom";
+import CustomNavLinks from "../../Components/CustomNavlink/CustomNavlink";
 
 const RentedCarView = () => {
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: "70vh" }}>
-      {/* Account page navigation*/}
-      <nav className="nav nav-borders">
-        <NavLink exact to="/profile" className="nav-link">
-          Profile
-        </NavLink>
-        <NavLink to="/rented-car" className="nav-link">
-          Car have been rented
-        </NavLink>
-        <NavLink to="/favorite-list" className="nav-link">
-          Favorite List
-        </NavLink>
-      </nav>
+     <CustomNavLinks />
       <hr className="mt-0 mb-4" />
 
       {/* DataTales Example */}
