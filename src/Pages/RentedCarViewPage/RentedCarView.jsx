@@ -45,7 +45,7 @@ const RentedCarView = () => {
                     <td></td>
                     <td></td>
                     <td>
-                        <Link className="btn btn-outline-danger">Vehicle Details</Link>
+                      <Link className="btn btn-outline-danger">Vehicle Details</Link>
                     </td>
 
                   </tr>
