@@ -122,12 +122,13 @@ const EditPost = () => {
             label="PlaceId"
             name="placeId"
             rules={[{ required: true, message: 'Please input the place ID!' }]}
+            extra={<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener noreferrer" style={{ marginTop: '8px', display: 'block' }}>Take your Place ID</a>}
           >
             <Input />
           </Form.Item>
     
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
               Update
             </Button>
           </Form.Item>
