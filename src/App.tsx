@@ -4,18 +4,19 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import { UserProvider } from "./Context/useAuth";
+import { PostProvider } from "./Context/usePost"; // Import PostProvider
 import Footer from "./Components/Footer/Footer";
 
 function App() {
   return (
-    <>
-      <UserProvider>
+    <UserProvider>
+      <PostProvider> {/* Wrap with PostProvider */}
         <Navbar />
         <Outlet />
         <ToastContainer />
         <Footer />
-      </UserProvider>
-    </>
+      </PostProvider>
+    </UserProvider>
   );
 }
 

@@ -11,27 +11,24 @@ const PostListPage = () => {
   const { user } = useAuth(); 
   const userId = user?.userId; 
 
-  useEffect(() => {
-    const userId = user?.userId; 
-    fetchPostVehicles(userId);
-  }, []);
+useEffect(() => {
+    const fetchPostVehicles = async () => {
+        try {
+            const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicles-by-user/${userId}`);
+            setPostVehicles(response.data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching post vehicles:', error);
+        }
+    };
 
-  const fetchPostVehicles = async () => {
-    try {
-      const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicles-by-user/${userId}`);
-      setPostVehicles(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching post vehicles:', error);
+    if (userId) {
+        fetchPostVehicles();
     }
-  };
+}, [userId]);
+
 
   const columns = [
-    {
-      title: 'Id',
-      dataIndex: 'id',
-      key: 'id',
-    },
     {
       title: 'No. of Renters',
       dataIndex: 'renters',
@@ -44,9 +41,19 @@ const PostListPage = () => {
       render: (text) => <img src={text} alt="Post" style={{ width: '50px', height: '50px', objectFit: 'cover' }} />,
     },
     {
-        title: 'Vehicle Name', 
-        dataIndex: 'vehicleName', 
-        key: 'vehicleName',
+      title: 'Vehicle Name', 
+      dataIndex: 'vehicleName', 
+      key: 'vehicleName',
+    },
+    {
+      title: 'Vehicle Type',
+      dataIndex: 'vehicleType',
+      key: 'vehicleType',
+    },
+    {
+      title: 'Vehicle Fuel', // Added Vehicle Fuel column
+      dataIndex: 'vehicleFuel', // Assuming this is the correct field name in your data
+      key: 'vehicleFuel',
     },
     {
       title: 'Title',
@@ -62,11 +69,6 @@ const PostListPage = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-    },
-    {
-      title: 'Vehicle Type',
-      dataIndex: 'vehicleType',
-      key: 'vehicleType',
     },
     {
       title: 'Rating',
@@ -89,12 +91,10 @@ const PostListPage = () => {
             <Button type="primary" className="bg-blue-500 hover:bg-blue-700 ">
               <Link to={`/edit-post/${record.id}`} className="text-white no-underline">Edit</Link>
             </Button>
-            <Button type="primary" className="bg-green-500 hover:bg-green-700">
-              <Link to={`/post-vehicles/registrations/${record.id}`} className="text-white no-underline">Registrations</Link>
-            </Button>
+            {/* Other actions... */}
           </Space>
         ),
-      },
+    },
   ];
 
   return (
@@ -104,10 +104,11 @@ const PostListPage = () => {
       <hr className="mt-0 mb-4" />
 
       <Link to="/create-post" className="btn btn-info h3 mb-2">Create New Post</Link>
-    {/* Ant Design Table */}
-        <div className="table-responsive">
-            <Table columns={columns} dataSource={postVehicles} loading={loading} scroll={{ x: 768 }} />
-        </div>
+
+      {/* Ant Design Table */}
+      <div className="table-responsive">
+        <Table columns={columns} dataSource={postVehicles} loading={loading} scroll={{ x: 768 }} />
+      </div>
     </div>
   );
 };
