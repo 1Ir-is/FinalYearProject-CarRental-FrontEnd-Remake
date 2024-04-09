@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Form, Input, Button, Row, Col, Typography, message } from 'antd';
 import { useAuth } from '../../Context/useAuth';
-import { toast } from 'react-toastify'; 
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
-
 import './ProfilePage.css';
+
+const { Title } = Typography;
 
 const ProfilePage = () => {
   const { user, setUser } = useAuth();
@@ -17,13 +16,12 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
-    // Update formData state when user object changes
     setFormData({
       name: user.name,
       address: user.address,
       phone: user.phone
     });
-  }, [user]); // Run this effect whenever user object changes
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -33,8 +31,7 @@ const ProfilePage = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       const requestData = {
         ...formData,
@@ -42,12 +39,7 @@ const ProfilePage = () => {
       };
       const response = await axios.post(
         'https://localhost:7228/api/User/edit-info',
-        requestData,
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
+        requestData
       );
 
       const editedUserData = {
@@ -58,14 +50,12 @@ const ProfilePage = () => {
 
       console.log('Edit user response:', response.data);
 
-       // Show toast notification for successful update
-      toast.success('Profile updated successfully');
+      message.success('Profile updated successfully');
     } catch (error) {
       console.error('Error editing user:', error);
     }
   };
 
-  // Function to get user role based on role code
   const getUserRole = (role) => {
     switch (role) {
       case 0:
@@ -80,60 +70,69 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>  
+    <div className="container-xl px-4 mt-5 mb-5">
       <CustomNavLinks />
       <hr className="mt-0 mb-4" />
-      <div className="row">
-        <div className="col-xl-4">
+      <Row gutter={24}>
+        <Col span={8}>
           <div className="card mb-4 mb-xl-0">
             <div className="card-header">Avatar</div>
             <div className="card-body text-center">
-              {/* Profile picture image */}
               <img className="img-account-profile rounded-circle mb-2" src={user?.avatar} alt="" />
             </div>
           </div>
-        </div>
-        <div className="col-xl-8">
+        </Col>
+        <Col span={16}>
           <div className="card mb-4">
             <div className="card-header">Personal Information</div>
             <div className="card-body">
-              <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <div className="row gx-3 mb-3">
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="fullName">Name</label>
-                    <input className="form-control" id="fullName" name="name" type="text" placeholder="Enter your name" value={formData.name} onChange={handleInputChange} />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="role">Role</label>
-                    <p>{getUserRole(user.role)}</p> {/* Display user role */}
-                  </div>
-                </div>
-                <div className="row gx-3 mb-3">
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="mobile">Phone Number</label>
-                    <input className="form-control" id="mobile" name="phone" type="text" placeholder="Enter your phone number" value={formData.phone} onChange={handleInputChange} />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="fullAddress">Address</label>
-                    <input className="form-control" id="fullAddress" name="address" type="text" placeholder="Enter your address" value={formData.address} onChange={handleInputChange} />
-                  </div>
-                </div>
-                <div className="row gx-3 mb-3">
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="email">Email</label>
-                    <input className="form-control" id="email" type="email" name="email" placeholder="Enter your email" value={user.email} readOnly />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="small mb-1" htmlFor="trustPoint">Trust score</label>
-                    <span>{user.trustPoint}</span>
-                  </div>
-                </div>
-                <button className="btn btn-primary" type="submit">Update</button>
-              </form>
+              <Form layout="vertical" onFinish={handleSubmit}>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item label="Name">
+                      <Input name="name" placeholder="Enter your name" value={formData.name} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="Role">
+                      <p>{getUserRole(user.role)}</p>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item label="Phone Number">
+                      <Input name="phone" placeholder="Enter your phone number" value={formData.phone} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="Address">
+                      <Input name="address" placeholder="Enter your address" value={formData.address} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={24}>
+                  <Col span={12}>
+                    <Form.Item label="Email">
+                      <Input value={user.email} readOnly />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="Trust score">
+                      <span>{user.trustPoint}</span>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" className="bg-blue-500 hover:bg-blue-700">
+                    Update
+                  </Button>
+                </Form.Item>
+              </Form>
             </div>
           </div>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </div>
   );
 };
