@@ -167,7 +167,7 @@ const CreatePost = () => {
 
       <Modal
         title="Confirmation"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okButtonProps={{ // Style the OK button
