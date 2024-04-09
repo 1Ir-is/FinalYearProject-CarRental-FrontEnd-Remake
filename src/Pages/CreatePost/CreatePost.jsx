@@ -1,62 +1,186 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Button, Form, Input, InputNumber, Select, Modal, message } from 'antd';
+import axios from 'axios';
+import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
+import { useNavigate } from 'react-router-dom';
 
-const CreatePostPage = () => {
-    return (
-        <div className="container">
-            <a href="/posts" className="btn btn-outline-danger mb-3 mt-5">
-                Go back
-            </a>
-            <form className="user mb-5" action="/create-post" method="post" encType="multipart/form-data">
-                <div className="form-group">
-                    <label>Vehicle Name</label>
-                    <input type="text" name="VehicleName" className="form-control form-control-user mb-3"
-                           required placeholder="Vehicle Name" />
-                    <label>Fuel Type</label>
-                    <input type="text" name="VehicleFuel" className="form-control form-control-user mb-3"
-                           required placeholder="Fuel Type" />
-                    <label>Vehicle Type</label>
-                    <input type="text" name="VehicleType" className="form-control form-control-user mb-3"
-                           required placeholder="Vehicle Type" />
-                    <label>Manufacturing Year</label>
-                    <input type="text" name="VehicleYear" className="form-control form-control-user mb-3"
-                           required placeholder="Manufacturing Year" />
-                    <label>Number of Seats</label>
-                    <input type="text" name="VehicleSeat" className="form-control form-control-user mb-3"
-                           required placeholder="Number of Seats" />
-                    <label>Title</label>
-                    <input type="text" name="Title" className="form-control form-control-user mb-3"
-                           required placeholder="Title" />
-                    <label>Description</label>
-                    <input type="text" name="Description" className="form-control form-control-user mb-3"
-                           required placeholder="Description" />
-                    <label>Image</label>
-                    <input type="file" name="Image" required placeholder="Image" />
-                    <div>
-                        <label>Category</label>
-                        <select name="Category" required>
-                            <option value="Car">Car</option>
-                            <option value="Motorbike">Motorbike</option>
-                        </select>
-                    </div>
-                    <label>Price</label>
-                    <input type="text" name="Price" className="form-control form-control-user mb-3"
-                           required placeholder="Price" />
-                    <label>Address</label>
-                    <input type="text" name="Address" className="form-control form-control-user mb-3"
-                           required placeholder="Address" />
-                    <label>PlaceId</label>
-                    <input type="text" name="PlaceId" className="form-control form-control-user mb-3"
-                           required placeholder="PlaceId" />
-                    <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank">Get your address PlaceId</a>
-                </div>
-                <div className="mt-3 d-flex justify-content-center">
-                    <button type="submit" className="w-50 btn btn-primary btn-user btn-block">
-                        Create
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
+const { Option } = Select;
+
+const CreatePost = () => {
+  const { user } = useAuth(); // Get user object from context
+  const userId = user?.userId; // Extract userId from user object
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate();
+
+  const onFinish = () => {
+    setIsModalVisible(true); // Show confirmation modal
+  };
+
+  const handleModalOk = async () => {
+    try {
+      const values = await form.validateFields(); // Validate form fields
+      const response = await axios.post(`https://localhost:7228/api/Owner/create-post/${userId}`, values);
+      console.log(response.data); // Handle success response
+      message.success('Post created successfully!');
+      setIsModalVisible(false); // Hide modal
+      // Reset form fields
+      form.resetFields();
+      // Navigate to /vehicle-post
+      navigate('/vehicle-post');
+    } catch (error) {
+      console.error('Error creating post:', error); // Handle error
+    }
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const [form] = Form.useForm();
+
+  return (
+    <>
+    <Form
+      className='w-1/2 mx-auto bg-white p-6 rounded-lg shadow-md'
+      style={{ marginTop: '35px', marginBottom: '35px' }}
+      labelCol={{
+        xs: { span: 24 },
+        sm: { span: 6 },
+      }}
+      wrapperCol={{
+        xs: { span: 24 },
+        sm: { span: 14 },
+      }}
+      layout="horizontal"
+      initialValues={{ remember: true }}
+      onFinish={onFinish} // Handle form submission
+      form={form} // Pass the form instance
+    >
+      <Form.Item
+        label="Vehicle Name"
+        name="VehicleName"
+        rules={[{ required: true, message: 'Please input the vehicle name!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Fuel Type"
+        name="VehicleFuel"
+        rules={[{ required: true, message: 'Please input the fuel type!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Vehicle Type"
+        name="VehicleType"
+        rules={[{ required: true, message: 'Please input the vehicle type!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Manufacturing Year"
+        name="VehicleYear"
+        rules={[{ required: true, message: 'Please input the manufacturing year!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Number of Seats"
+        name="VehicleSeat"
+        rules={[{ required: true, message: 'Please input the number of seats!' }]}
+      >
+        <InputNumber />
+      </Form.Item>
+
+      <Form.Item
+        label="Title"
+        name="Title"
+        rules={[{ required: true, message: 'Please input the title!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Description"
+        name="Description"
+        rules={[{ required: true, message: 'Please input the description!' }]}
+      >
+        <Input.TextArea />
+      </Form.Item>
+
+      {/* <Form.Item
+        label="Image"
+        name="Image"
+        rules={[{ required: true, message: 'Please input the image!' }]}
+      >
+        <Input type="file" />
+      </Form.Item> */}
+
+      <Form.Item
+        label="Category"
+        name="Category"
+        rules={[{ required: true, message: 'Please select the category!' }]}
+      >
+        <Select>
+          <Option value="Car">Car</Option>
+          <Option value="Motorbike">Motorbike</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item
+        label="Price"
+        name="Price"
+        rules={[{ required: true, message: 'Please input the price!' }]}
+      >
+        <InputNumber />
+      </Form.Item>
+
+      <Form.Item
+        label="Address"
+        name="Address"
+        rules={[{ required: true, message: 'Please input the address!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="PlaceId"
+        name="PlaceId"
+        rules={[{ required: true, message: 'Please input the place ID!' }]}
+        extra={<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener noreferrer" style={{ marginTop: '8px', display: 'block' }}>Take your Place ID</a>}
+        >
+        <Input />
+      </Form.Item>
+
+     
+      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+        <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
+          Create
+        </Button>
+      </Form.Item>
+    </Form>
+    {/* Confirmation Modal */}
+
+      <Modal
+        title="Confirmation"
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        okButtonProps={{ // Style the OK button
+          className: 'bg-sky-500 hover:bg-sky-700', // Add your button styles here
+        }}
+        cancelButtonProps={{ // Style the Cancel button
+          className: 'bg-red-500 hover:bg-red-700', // Add your button styles here
+        }}
+      >
+        <p>Are you sure you want to add this post?</p>
+      </Modal>
+    </>
+  );
 };
 
-export default CreatePostPage;
+export default CreatePost;
