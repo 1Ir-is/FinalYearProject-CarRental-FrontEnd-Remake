@@ -18,6 +18,7 @@ import carData from "../../assets/data/carData";
 
 
 import "./Hero.css";
+import TalkJs from "../ChatBox/TalkJs";
 
 
 const Hero = () => {
@@ -89,6 +90,7 @@ const Hero = () => {
           </Row>
         </Container>
       </section>
+      <TalkJs />
 
       {/* =============== blog section =========== */}
       <section>
