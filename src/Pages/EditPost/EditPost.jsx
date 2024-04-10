@@ -94,9 +94,9 @@ const EditPost = () => {
           </Form.Item>
     
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                    Update
-                </Button>
+              <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
+                Update
+              </Button>
             </Form.Item>
         </Form>
       )}

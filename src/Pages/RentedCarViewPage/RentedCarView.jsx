@@ -1,34 +1,43 @@
-import React from 'react';
-import { Table, Button, Modal } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Modal, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 
 const RentedCarView = () => {
   // Sample data for demonstration, replace with actual data fetched from API
-  const data = [
-    {
-      id: 1,
-      vehicleName: 'Vehicle 1',
-      customerName: 'John Doe',
-      phone: '123-456-7890',
-      email: 'john@example.com',
-      price: 100,
-      pickUpDate: '2024-04-10',
-      returnDate: '2024-04-15',
-      bookingDate: '2024-04-05',
-    },
-    {
-      id: 2,
-      vehicleName: 'Vehicle 2',
-      customerName: 'Jane Doe',
-      phone: '987-654-3210',
-      email: 'jane@example.com',
-      price: 200,
-      pickUpDate: '2024-04-12',
-      returnDate: '2024-04-17',
-      bookingDate: '2024-04-07',
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call for demonstration purpose
+    setTimeout(() => {
+      setData([
+        {
+          id: 1,
+          vehicleName: 'Vehicle 1',
+          customerName: 'John Doe',
+          phone: '123-456-7890',
+          email: 'john@example.com',
+          price: 100,
+          pickUpDate: '2024-04-10',
+          returnDate: '2024-04-15',
+          bookingDate: '2024-04-05',
+        },
+        {
+          id: 2,
+          vehicleName: 'Vehicle 2',
+          customerName: 'Jane Doe',
+          phone: '987-654-3210',
+          email: 'jane@example.com',
+          price: 200,
+          pickUpDate: '2024-04-12',
+          returnDate: '2024-04-17',
+          bookingDate: '2024-04-07',
+        },
+      ]);
+      setLoading(false);
+    }, 1500); // Simulated delay
+  }, []);
 
   const columns = [
     {
@@ -107,7 +116,6 @@ const RentedCarView = () => {
       onOk() {},
       okButtonProps: { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" },
     });
-    
   };
 
   return (
@@ -120,9 +128,15 @@ const RentedCarView = () => {
           <h6 className="m-0 font-weight-bold text-primary">Rental List</h6>
         </div>
         <div className="card-body">
-          <div className="table-responsive">
-            <Table columns={columns} dataSource={data} />
-          </div>
+          {loading ? (
+            <div className="text-center">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <Table columns={columns} dataSource={data} />
+            </div>
+          )}
         </div>
       </div>
     </div>

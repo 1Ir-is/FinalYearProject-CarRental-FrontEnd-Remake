@@ -1,29 +1,37 @@
-import React from 'react';
-import { Table, Button, Tag, Space, Modal, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Tag, Space, message, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 import axios from 'axios'; // Import axios if needed
 
 const FavoriteVehicleList = () => {
-  // Sample data for demonstration, replace with actual data fetched from API
-  const data = [
-    {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-      image: 'https://via.placeholder.com/100',
-      vehicleName: 'Vehicle 1',
-      address: 'Address 1',
-      price: 1000,
-      vehicleType: 'Car',
-    },
-    {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Simulate API call
+        // Replace this with actual API call using axios
+        // const response = await axios.get('API_ENDPOINT');
+        // setData(response.data);
+        // setLoading(false);
 
-      image: 'https://via.placeholder.com/100',
-      vehicleName: 'Vehicle 2',
-      address: 'Address 2',
-      price: 2000,
-      vehicleType: 'Motorbike',
-    },
-  ];
+        // Simulate API call for demonstration purpose
+        setTimeout(() => {
+          setData([
+           
+          ]);
+          setLoading(false);
+        }, 1500); // Simulated delay
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = [
     {
@@ -88,9 +96,15 @@ const FavoriteVehicleList = () => {
           <h6 className="m-0 font-weight-bold text-primary">Favorite List</h6>
         </div>
         <div className="card-body">
-          <div className="table-responsive">
-            <Table columns={columns} dataSource={data} />
-          </div>
+          {loading ? (
+            <div className="text-center">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <Table columns={columns} dataSource={data} />
+            </div>
+          )}
         </div>
       </div>
     </div>
