@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Select, message } from 'antd';
+import { Button, Form, Input, InputNumber, Select, message, Spin } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration'; 
@@ -13,8 +13,9 @@ const EditPost = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false); // State to track loading state for image upload
 
- useEffect(() => {
+  useEffect(() => {
     const fetchPostData = async () => {
       try {
         const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicle/${postId}`);
@@ -44,27 +45,31 @@ const EditPost = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     try {
+      setLoading(true); // Set loading to true when starting image upload
       const imageUrl = await uploadImageToCloudinary(file);
       setImageUrl(imageUrl);
+      setLoading(false); // Set loading to false when image upload is complete
     } catch (error) {
       console.error('Error uploading image:', error);
+      setLoading(false); // Set loading to false on error
     }
   };
 
+
   return (
-    <div className="container">
+   <div className="container">
       {postData && (
         <Form
-        className='w-1/2 mx-auto bg-white p-6 rounded-lg shadow-md'
-        style={{ marginTop: '35px', marginBottom: '35px' }}
-        labelCol={{
+          className='w-1/2 mx-auto bg-white p-6 rounded-lg shadow-md'
+          style={{ marginTop: '35px', marginBottom: '35px' }}
+          labelCol={{
             xs: { span: 24 },
             sm: { span: 6 },
-        }}
-        wrapperCol={{
+          }}
+          wrapperCol={{
             xs: { span: 24 },
             sm: { span: 14 },
-        }}
+          }}
           onFinish={onFinish}
           initialValues={postData}
         >
@@ -90,7 +95,10 @@ const EditPost = () => {
             <Input.TextArea />
           </Form.Item>
           <Form.Item label="Image" name="Image">
-            <input type="file" onChange={handleFileChange} />
+            <div>
+              <input type="file" onChange={handleFileChange} />
+              {loading && <Spin />} {/* Display loading spinner while uploading image */}
+            </div>
           </Form.Item>
           <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select the category!' }]}>
             <Select>
