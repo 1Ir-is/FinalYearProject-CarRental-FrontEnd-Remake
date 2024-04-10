@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Select, Modal, message } from 'antd';
+import { Button, Form, Input, InputNumber, Select, Modal, message, Spin, } from 'antd';
 import axios from 'axios';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
 import { useNavigate } from 'react-router-dom';
 import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration';
+import { LoadingOutlined } from '@ant-design/icons';
+
 
 const { Option } = Select;
 
@@ -13,6 +15,7 @@ const CreatePost = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(false);
 
 
   const onFinish = async (values) => {
@@ -23,6 +26,7 @@ const CreatePost = () => {
 
   const handleModalOk = async () => {
     try {
+      setLoading(true); 
       const values = await form.validateFields(); // Validate form fields
       if (imageUrl) {
         values.Image = imageUrl; // Assign the Cloudinary image URL to the form values
@@ -31,6 +35,7 @@ const CreatePost = () => {
       console.log(response.data); // Handle success response
       message.success('Post created successfully!');
       setIsModalVisible(false); // Hide modal
+      setLoading(false);
       // Reset form fields
       form.resetFields();
       // Navigate to /vehicle-post
@@ -173,7 +178,7 @@ const CreatePost = () => {
         >
         <Input />
       </Form.Item>
-
+      
      
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
@@ -183,20 +188,24 @@ const CreatePost = () => {
     </Form>
     {/* Confirmation Modal */}
 
-      <Modal
-        title="Confirmation"
-        open={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        okButtonProps={{ // Style the OK button
-          className: 'bg-sky-500 hover:bg-sky-700', // Add your button styles here
-        }}
-        cancelButtonProps={{ // Style the Cancel button
-          className: 'bg-red-500 hover:bg-red-700', // Add your button styles here
-        }}
-      >
+    <Modal
+      title="Confirmation"
+      visible={isModalVisible}
+      onOk={handleModalOk}
+      onCancel={handleModalCancel}
+      okButtonProps={{ // Style the OK button
+        className: 'bg-sky-500 hover:bg-sky-700', // Add your button styles here
+      }}
+      cancelButtonProps={{ // Style the Cancel button
+        className: 'bg-red-500 hover:bg-red-700', // Add your button styles here
+      }}
+    >
+      {loading ? (
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+      ) : (
         <p>Are you sure you want to add this post?</p>
-      </Modal>
+      )}
+    </Modal>
     </>
   );
 };
