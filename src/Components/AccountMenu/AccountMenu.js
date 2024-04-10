@@ -92,7 +92,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem component={Link} to={`/profile/${user.userId}`}>
-            <Avatar /> Profile
+            <Avatar src={userAvatar}/> Profile
         </MenuItem>
       
         <Divider />

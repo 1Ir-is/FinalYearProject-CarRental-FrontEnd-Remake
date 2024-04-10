@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Row, Col, Typography, message } from 'antd';
+import { Form, Input, Button, Row, Col, Typography, message, Modal } from 'antd';
 import { useAuth } from '../../Context/useAuth';
 import axios from 'axios';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
@@ -47,29 +47,42 @@ const ProfilePage = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const requestData = {
-        ...formData,
-        userId: currentUser.userId  // Change currentUser.id to currentUser.userId
-      };
-      const response = await axios.post(
-        'https://localhost:7228/api/User/edit-info',
-        requestData
-      );
+    Modal.confirm({
+      title: 'Confirm Update',
+      content: 'Are you sure you want to update your profile?',
+      okText: 'Yes',
+      cancelText: 'No',
+      okButtonProps: {
+        className: 'bg-blue-500 hover:bg-blue-700' // Add your button styles here
+      },
+      onOk: async () => {
+        try {
+          const requestData = {
+            ...formData,
+            userId: currentUser.userId
+          };
+          const response = await axios.post(
+            'https://localhost:7228/api/User/edit-info',
+            requestData
+          );
   
-      const editedUserData = {
-        ...currentUser,
-        ...formData
-      };
-      setCurrentUser(editedUserData);
+          const editedUserData = {
+            ...currentUser,
+            ...formData
+          };
+          setCurrentUser(editedUserData);
   
-      console.log('Edit user response:', response.data);
+          console.log('Edit user response:', response.data);
   
-      message.success('Profile updated successfully');
-    } catch (error) {
-      console.error('Error editing user:', error);
-    }
+          message.success('Profile updated successfully');
+        } catch (error) {
+          console.error('Error editing user:', error);
+        }
+      }
+    });
   };
+  
+  
   
   
 
