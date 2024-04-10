@@ -1,10 +1,6 @@
-import React from "react";
-
+import React, { useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-
-
 import Helmet from "../Helmet/Helmet";
-
 import HeroSlider from "../../UI/HeroSlider/HeroSlider";
 import FindCarForm from "../../UI/FindCarForm/FindCarForm";
 import AboutSection from "../../UI/AboutSection/AboutSection";
@@ -13,21 +9,24 @@ import ServicesList from "../../UI/ServiceList/ServiceList";
 import BecomeDriverSection from "../../UI/BecomeDriverSection/BecomeDriveSection";
 import Testimonial from "../../UI/Testimonial/Testimonial";
 import BlogList from "../../UI/BlogList/BlogList";
-
+import { Button, Modal } from 'antd';
+import TalkJs from '../ChatBox/TalkJs';
+import { MessageOutlined } from '@ant-design/icons';
 import carData from "../../assets/data/carData";
-
-
 import "./Hero.css";
-import TalkJs from "../ChatBox/TalkJs";
-
 
 const Hero = () => {
+  const [isTalkJsVisible, setIsTalkJsVisible] = useState(false);
+
+  const toggleTalkJs = () => {
+    setIsTalkJsVisible(prevState => !prevState);
+  };
+
   return (
     <Helmet title="Home">
       {/* ============= hero section =========== */}
       <section className="p-0 hero__slider-section">
         <HeroSlider />
-
         <div className="hero__form">
           <Container>
             <Row className="form__row">
@@ -36,7 +35,6 @@ const Hero = () => {
                   <h2>Find your best car here</h2>
                 </div>
               </Col>
-
               <Col lg="8" md="8" sm="12">
                 <FindCarForm />
               </Col>
@@ -54,7 +52,6 @@ const Hero = () => {
               <h6 className="section__subtitle">See our</h6>
               <h2 className="section__title">Popular Services</h2>
             </Col>
-
             <ServicesList />
           </Row>
         </Container>
@@ -67,7 +64,6 @@ const Hero = () => {
               <h6 className="section__subtitle">Come with</h6>
               <h2 className="section__title">Hot Offers</h2>
             </Col>
-
             {carData.slice(0, 6).map((item) => (
               <CarItem item={item} key={item.id} />
             ))}
@@ -76,7 +72,6 @@ const Hero = () => {
       </section>
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />
-
       {/* =========== testimonial section =========== */}
       <section>
         <Container>
@@ -85,12 +80,30 @@ const Hero = () => {
               <h6 className="section__subtitle">Our clients says</h6>
               <h2 className="section__title">Testimonials</h2>
             </Col>
-
             <Testimonial />
           </Row>
         </Container>
       </section>
-      <TalkJs />
+
+      {/* =============== talkjs section =========== */}
+      <div style={{ position: 'relative' , backgroundColor: 'white'}}>
+        {/* Your existing code */}
+        <MessageOutlined
+          onClick={toggleTalkJs}
+          style={{ position: 'fixed', bottom: '100px', right: '20px', fontSize: '35px', color: '#1890ff', cursor: 'pointer' }}
+        />
+        <Modal
+          title="Chat"
+          open={isTalkJsVisible}
+          onCancel={toggleTalkJs}
+          footer={null}
+          width={400}
+          style={{ top: 20 }}
+        >
+          <TalkJs />
+        </Modal>
+    </div>
+
 
       {/* =============== blog section =========== */}
       <section>
@@ -100,7 +113,6 @@ const Hero = () => {
               <h6 className="section__subtitle">Explore our blogs</h6>
               <h2 className="section__title">Latest Blogs</h2>
             </Col>
-
             <BlogList />
           </Row>
         </Container>
