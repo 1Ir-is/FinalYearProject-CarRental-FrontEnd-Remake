@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Logout from '@mui/icons-material/Logout';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { useAuth } from '../../Context/useAuth';
 import { Link } from "react-router-dom";
 import axios from 'axios';
@@ -39,6 +40,7 @@ export default function AccountMenu() {
     }
   }, [user]);
   const { logout } = useAuth();
+
   return (
     <React.Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -67,7 +69,7 @@ export default function AccountMenu() {
             overflow: 'visible',
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
-            width: 180, // Adjust the width as needed
+            width: 220, // Adjust the width as needed
             '& .MuiAvatar-root': {
               width: 32,
               height: 32,
@@ -92,11 +94,15 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem component={Link} to={`/profile/${user.userId}`}>
-            <Avatar src={userAvatar}/> Profile
+          <Avatar src={userAvatar}/> Profile
         </MenuItem>
-      
+        <MenuItem component={Link} to="/change-password"> {/* Add the Link to the Change Password page */}
+          <ListItemIcon>
+            <VpnKeyIcon fontSize="small" />
+          </ListItemIcon>
+          Change Password
+        </MenuItem>
         <Divider />
-        
         <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />

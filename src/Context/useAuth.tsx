@@ -6,6 +6,7 @@ import { loginAPI, registerAPI } from "../Services/AuthService";
 import { editUserAPI } from "../Services/UserService";
 import { toast } from "react-toastify";
 import React from "react";
+import { message } from "antd";
 
 type UserContextType = {
   user: UserProfile | null;
@@ -51,7 +52,7 @@ export const UserProvider = ({ children }: Props) => {
         localStorage.removeItem("user");
         setToken(null);
         setUser(null);
-        toast.success("Register Success!");
+        message.success("Register Success!");
         navigate("/login");
       }
     } catch (error) {
@@ -78,7 +79,7 @@ export const UserProvider = ({ children }: Props) => {
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
           setUser(userObj!);
-          toast.success("Login Success!");
+          message.success("Login Success!");
           navigate("/home");
         }
       })

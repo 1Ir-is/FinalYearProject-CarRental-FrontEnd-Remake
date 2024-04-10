@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import HomePage from "../Pages/HomePage/HomePage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
-
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import AboutPage from "../Pages/AboutPage/About";
 import CarListing from "../Pages/CarListing/CarListing";
@@ -17,7 +16,7 @@ import FavoriteVehicleList from "../Pages/FavoriteListPage/FavoriteList";
 import VehiclePost from "../Pages/VehiclePost/VehiclePost";
 import CreatePostPage from "../Pages/CreatePost/CreatePost";
 import EditPost from "../Pages/EditPost/EditPost";
-
+import ChangePasswordPage from "../Pages/ChangePassword/ChangePassword";
 import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -41,7 +40,8 @@ export const router = createBrowserRouter([
       { path: "register-owner", element: <OwnerPage /> },
       { path: "vehicle-post", element: <VehiclePost /> },
       { path: "create-post", element: <CreatePostPage /> },
-      { path: "edit-post/:postId", element: <EditPost /> },    
+      { path: "edit-post/:postId", element: <EditPost /> },
+      { path: "change-password", element: <ChangePasswordPage /> }, 
       {
         path: "register-owner",
         element: (
