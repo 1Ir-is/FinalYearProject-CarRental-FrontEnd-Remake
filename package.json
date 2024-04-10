@@ -18,6 +18,8 @@
     "antd": "^5.16.1",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.3",
+    "cloudinary": "^2.1.0",
+    "cloudinary-core": "^2.13.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "flowbite-react": "^0.7.3",
@@ -70,6 +72,8 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/react-slick": "^0.23.13",
     "@types/uuid": "^9.0.2",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   }
 }

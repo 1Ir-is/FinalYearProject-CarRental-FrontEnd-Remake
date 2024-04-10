@@ -3,6 +3,7 @@ import { Button, Form, Input, InputNumber, Select, Modal, message } from 'antd';
 import axios from 'axios';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
 import { useNavigate } from 'react-router-dom';
+import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration';
 
 const { Option } = Select;
 
@@ -11,14 +12,21 @@ const CreatePost = () => {
   const userId = user?.userId; // Extract userId from user object
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState('');
 
-  const onFinish = () => {
-    setIsModalVisible(true); // Show confirmation modal
+
+  const onFinish = async (values) => {
+    setIsModalVisible(true);
   };
+
+  
 
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields(); // Validate form fields
+      if (imageUrl) {
+        values.Image = imageUrl; // Assign the Cloudinary image URL to the form values
+      }
       const response = await axios.post(`https://localhost:7228/api/Owner/create-post/${userId}`, values);
       console.log(response.data); // Handle success response
       message.success('Post created successfully!');
@@ -34,6 +42,16 @@ const CreatePost = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    try {
+      const imageUrl = await uploadImageToCloudinary(file);
+      setImageUrl(imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
   };
 
   const [form] = Form.useForm();
@@ -112,13 +130,13 @@ const CreatePost = () => {
         <Input.TextArea />
       </Form.Item>
 
-      {/* <Form.Item
+      <Form.Item
         label="Image"
         name="Image"
         rules={[{ required: true, message: 'Please input the image!' }]}
       >
-        <Input type="file" />
-      </Form.Item> */}
+        <input type="file" onChange={handleFileChange} />
+      </Form.Item>
 
       <Form.Item
         label="Category"

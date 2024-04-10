@@ -13,9 +13,11 @@ import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 import { useAuth } from '../../Context/useAuth';
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [userAvatar, setUserAvatar] = React.useState(null)
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +25,22 @@ export default function AccountMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const { user } = useAuth();
+  React.useEffect(() => {
+    // Fetch user's avatar from backend API
+    const fetchUserAvatar = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`); // Adjust the endpoint URL
+        setUserAvatar(response.data.avatar); // Set user's avatar URL in state
+      } catch (error) {
+        console.error('Error fetching user avatar:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserAvatar();
+    }
+  }, [user]);
   const { logout } = useAuth();
   return (
     <React.Fragment>
@@ -36,7 +54,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+            <Avatar sx={{ width: 32, height: 32 }} src={userAvatar}></Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -75,7 +93,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem component={Link} to="/profile">
+        <MenuItem component={Link} to={`/profile/${user.userId}`}> {/* Updated link to include user ID */}
             <Avatar /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
