@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Select, Modal, message, Spin, } from 'antd';
+import { Button, Form, Input, InputNumber, Select, Modal, message, Spin, Progress } from 'antd';
 import axios from 'axios';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
 import { useNavigate } from 'react-router-dom';
@@ -10,38 +10,32 @@ import { LoadingOutlined } from '@ant-design/icons';
 const { Option } = Select;
 
 const CreatePost = () => {
-  const { user } = useAuth(); // Get user object from context
-  const userId = user?.userId; // Extract userId from user object
+  const { user } = useAuth();
+  const userId = user?.userId;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
-
   const onFinish = async (values) => {
     setIsModalVisible(true);
   };
 
-  
-
   const handleModalOk = async () => {
     try {
-      setLoading(true); 
-      const values = await form.validateFields(); // Validate form fields
+      setLoading(true);
+      const values = await form.validateFields();
       if (imageUrl) {
-        values.Image = imageUrl; // Assign the Cloudinary image URL to the form values
+        values.Image = imageUrl;
       }
       const response = await axios.post(`https://localhost:7228/api/Owner/create-post/${userId}`, values);
-      console.log(response.data); // Handle success response
       message.success('Post created successfully!');
-      setIsModalVisible(false); // Hide modal
+      setIsModalVisible(false);
       setLoading(false);
-      // Reset form fields
       form.resetFields();
-      // Navigate to /vehicle-post
       navigate('/vehicle-post');
     } catch (error) {
-      console.error('Error creating post:', error); // Handle error
+      console.error('Error creating post:', error);
     }
   };
 
@@ -52,10 +46,13 @@ const CreatePost = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     try {
+      setLoading(true);
       const imageUrl = await uploadImageToCloudinary(file);
       setImageUrl(imageUrl);
+      setLoading(false); // Stop loading after the upload is complete
     } catch (error) {
       console.error('Error uploading image:', error);
+      setLoading(false);
     }
   };
 
@@ -76,8 +73,8 @@ const CreatePost = () => {
       }}
       layout="horizontal"
       initialValues={{ remember: true }}
-      onFinish={onFinish} // Handle form submission
-      form={form} // Pass the form instance
+      onFinish={onFinish}
+      form={form}
     >
       <Form.Item
         label="Vehicle Name"
@@ -148,12 +145,15 @@ const CreatePost = () => {
       </Form.Item>
 
       <Form.Item
-        label="Image"
-        name="Image"
-        rules={[{ required: true, message: 'Please input the image!' }]}
-      >
-        <input type="file" onChange={handleFileChange} />
-      </Form.Item>
+          label="Image"
+          name="Image"
+          rules={[{ required: true, message: 'Please input the image!' }]}
+        >
+          <div>
+            <input type="file" onChange={handleFileChange} />
+            {loading && <Spin />}
+          </div>
+        </Form.Item>
 
       <Form.Item
         label="Category"
@@ -204,31 +204,26 @@ const CreatePost = () => {
       
      
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-        <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
-          Create
-        </Button>
+          <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
+            Create
+          </Button>
       </Form.Item>
     </Form>
     {/* Confirmation Modal */}
-
     <Modal
-      title="Confirmation"
-      visible={isModalVisible}
-      onOk={handleModalOk}
-      onCancel={handleModalCancel}
-      okButtonProps={{ // Style the OK button
-        className: 'bg-sky-500 hover:bg-sky-700', // Add your button styles here
-      }}
-      cancelButtonProps={{ // Style the Cancel button
-        className: 'bg-red-500 hover:bg-red-700', // Add your button styles here
-      }}
-    >
-      {loading ? (
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-      ) : (
-        <p>Are you sure you want to add this post?</p>
-      )}
-    </Modal>
+        title="Confirmation"
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700' }}
+        cancelButtonProps={{ className: 'bg-red-500 hover:bg-red-700' }}
+      >
+        {loading ? (
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+        ) : (
+          <p>Are you sure you want to add this post?</p>
+        )}
+      </Modal>
     </>
   );
 };
