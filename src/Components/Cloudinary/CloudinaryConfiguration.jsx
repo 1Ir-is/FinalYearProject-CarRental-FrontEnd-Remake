@@ -1,6 +1,3 @@
-
-
-
 export const uploadImageToCloudinary = async (imageFile) => {
     const formData = new FormData();
     formData.append('file', imageFile);

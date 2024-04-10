@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Select, message, Spin } from 'antd';
+import { Button, Form, Input, InputNumber, Select, message, Spin, Modal, LoadingOutlined } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration'; 
@@ -13,7 +13,10 @@ const EditPost = () => {
   const navigate = useNavigate();
   const [postData, setPostData] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
-  const [loading, setLoading] = useState(false); // State to track loading state for image upload
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -29,50 +32,69 @@ const EditPost = () => {
   }, [postId]);
 
   const onFinish = async (values) => {
+    setIsModalVisible(true);
+    form.setFieldsValue(values);
+  };
+
+  const handleModalOk = async () => {
+    setIsModalVisible(false);
+    setConfirmLoading(true);
+  
     try {
+      const values = await form.validateFields();
       if (imageUrl) {
-        values.Image = imageUrl; // Assign the Cloudinary image URL to the form values
+        values.Image = imageUrl;
       }
+  
+      // Send the update request immediately
       const response = await axios.put(`https://localhost:7228/api/Owner/update-post/${postId}`, values);
       console.log(response.data);
       message.success('Post updated successfully!');
       navigate('/vehicle-post');
     } catch (error) {
       console.error('Error updating post:', error);
+    } finally {
+      setConfirmLoading(false);
     }
+  };
+  
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
   };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     try {
-      setLoading(true); // Set loading to true when starting image upload
+      setLoading(true);
       const imageUrl = await uploadImageToCloudinary(file);
       setImageUrl(imageUrl);
-      setLoading(false); // Set loading to false when image upload is complete
+      setLoading(false);
     } catch (error) {
       console.error('Error uploading image:', error);
-      setLoading(false); // Set loading to false on error
+      setLoading(false);
     }
   };
 
 
   return (
-   <div className="container">
-      {postData && (
-        <Form
-          className='w-1/2 mx-auto bg-white p-6 rounded-lg shadow-md'
-          style={{ marginTop: '35px', marginBottom: '35px' }}
-          labelCol={{
-            xs: { span: 24 },
-            sm: { span: 6 },
-          }}
-          wrapperCol={{
-            xs: { span: 24 },
-            sm: { span: 14 },
-          }}
-          onFinish={onFinish}
-          initialValues={postData}
-        >
+    <div className="container">
+    {postData && (
+      <Form
+        className='w-1/2 mx-auto bg-white p-6 rounded-lg shadow-md'
+        style={{ marginTop: '35px', marginBottom: '35px' }}
+        labelCol={{
+          xs: { span: 24 },
+          sm: { span: 6 },
+        }}
+        wrapperCol={{
+          xs: { span: 24 },
+          sm: { span: 14 },
+        }}
+        onFinish={onFinish}
+        initialValues={postData}
+        form={form}
+      >
           <Form.Item label="Vehicle Name" name="vehicleName" rules={[{ required: true, message: 'Please input the vehicle name!' }]}>
             <Input />
           </Form.Item>
@@ -94,12 +116,13 @@ const EditPost = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the description!' }]}>
             <Input.TextArea />
           </Form.Item>
-          <Form.Item label="Image" name="Image">
+        <Form.Item label="Image" name="Image">
             <div>
               <input type="file" onChange={handleFileChange} />
               {loading && <Spin />} {/* Display loading spinner while uploading image */}
             </div>
           </Form.Item>
+
           <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select the category!' }]}>
             <Select>
               <Option value="Car">Car</Option>
@@ -128,6 +151,17 @@ const EditPost = () => {
           </Form.Item>
         </Form>
       )}
+          {/* Confirmation Modal */}
+      <Modal
+        title="Confirmation"
+        visible={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700', loading: loading }} // Pass loading prop to the OK button
+        cancelButtonProps={{ className: 'bg-red-500 hover:bg-red-700' }}
+      >
+        <p>Are you sure you want to update this post?</p>
+      </Modal>
     </div>
   );
 };
