@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Input, InputNumber, Select, message } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration'; 
+
+
 
 const { Option } = Select;
 
@@ -9,8 +12,9 @@ const EditPost = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
   const [postData, setPostData] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchPostData = async () => {
       try {
         const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicle/${postId}`);
@@ -25,12 +29,25 @@ const EditPost = () => {
 
   const onFinish = async (values) => {
     try {
+      if (imageUrl) {
+        values.Image = imageUrl; // Assign the Cloudinary image URL to the form values
+      }
       const response = await axios.put(`https://localhost:7228/api/Owner/update-post/${postId}`, values);
       console.log(response.data);
       message.success('Post updated successfully!');
       navigate('/vehicle-post');
     } catch (error) {
       console.error('Error updating post:', error);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    try {
+      const imageUrl = await uploadImageToCloudinary(file);
+      setImageUrl(imageUrl);
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
 
@@ -72,6 +89,9 @@ const EditPost = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the description!' }]}>
             <Input.TextArea />
           </Form.Item>
+          <Form.Item label="Image" name="Image">
+            <input type="file" onChange={handleFileChange} />
+          </Form.Item>
           <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select the category!' }]}>
             <Select>
               <Option value="Car">Car</Option>
@@ -92,12 +112,12 @@ const EditPost = () => {
           >
             <Input />
           </Form.Item>
-    
+          
           <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-              <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
-                Update
-              </Button>
-            </Form.Item>
+            <Button className='bg-sky-500 hover:bg-sky-700' type="primary" htmlType="submit">
+              Update
+            </Button>
+          </Form.Item>
         </Form>
       )}
     </div>
