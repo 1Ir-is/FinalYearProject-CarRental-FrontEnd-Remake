@@ -114,10 +114,22 @@ const CreatePost = () => {
       <Form.Item
         label="Number of Seats"
         name="VehicleSeat"
-        rules={[{ required: true, message: 'Please input the number of seats!' }]}
+        rules={[
+          { required: true, message: 'Please input the number of seats!' },
+          {
+            validator: (_, value) => {
+              if (value < 0) {
+                return Promise.reject(new Error('Number of seats must be a non-negative number!'));
+              }
+              return Promise.resolve();
+            },
+          },
+        ]}
       >
-        <InputNumber />
+        <Input type='number' style={{ width: '150px' }} />
       </Form.Item>
+
+
 
       <Form.Item
         label="Title"
@@ -157,10 +169,21 @@ const CreatePost = () => {
       <Form.Item
         label="Price"
         name="Price"
-        rules={[{ required: true, message: 'Please input the price!' }]}
+        rules={[
+          { required: true, message: 'Please input the price!' },
+          {
+            validator: (_, value) => {
+              if (value < 0) {
+                return Promise.reject(new Error('Price must be a non-negative number!'));
+              }
+              return Promise.resolve();
+            },
+          },
+        ]}
       >
-        <InputNumber />
+        <Input type='number' style={{ width: '150px' }} />
       </Form.Item>
+
 
       <Form.Item
         label="Address"

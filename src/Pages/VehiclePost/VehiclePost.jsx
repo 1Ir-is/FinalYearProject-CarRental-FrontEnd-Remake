@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Table, Tag, Button, Spin } from 'antd';
+import { Table, Button, Tag, Space, message, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
@@ -14,23 +14,31 @@ const VehiclePost = () => {
   useEffect(() => {
     const fetchPostVehicles = async () => {
       try {
-        // Simulated delay for demonstration
-        setTimeout(async () => {
-          const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicles-by-user/${userId}`);
-          setPostVehicles(response.data);
+        const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicles-by-user/${userId}`);
+        console.log('Response:', response);
+        if (response.status === 200) {
+          // Delay setting data and loading state by 1500 milliseconds
+          setTimeout(() => {
+            setPostVehicles(response.data);
+            setLoading(false);
+          }, 1500);
+        } else if (response.status === 404) {
+          // If no data found, set postVehicles to an empty array and stop loading
+          setPostVehicles([]);
           setLoading(false);
-        }, 1500); // Simulated delay
+        }
       } catch (error) {
         console.error('Error fetching post vehicles:', error);
-        setLoading(false); // Make sure to set loading to false in case of an error
+        setLoading(false);
       }
     };
-
+  
     if (userId) {
+      setLoading(true); // Set loading to true before making the API call
       fetchPostVehicles();
     }
   }, [userId]);
-
+  
 
   const columns = [
     {
@@ -105,9 +113,7 @@ const VehiclePost = () => {
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />
       <hr className="mt-0 mb-4" />
-
       <Link to="/create-post" className="btn btn-info h3 mb-2">Create New Post</Link>
-
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <h6 className="m-0 font-weight-bold text-primary">Vehicle List</h6>
