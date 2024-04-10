@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Row, Col, Typography, message, Modal } from 'antd';
+import { Form, Input, Button, Row, Col, Typography, message, Modal, Progress, Spin } from 'antd';
 import { useAuth } from '../../Context/useAuth';
 import axios from 'axios';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
@@ -16,6 +16,7 @@ const ProfilePage = () => {
     phone: '',
     avatar: null,
   });
+  const [uploading, setUploading] = useState(false); // State variable to track image upload status
   console.log(currentUser);
 
   useEffect(() => {
@@ -65,15 +66,15 @@ const ProfilePage = () => {
             'https://localhost:7228/api/User/edit-info',
             requestData
           );
-  
+
           const editedUserData = {
             ...currentUser,
             ...formData
           };
           setCurrentUser(editedUserData);
-  
+
           console.log('Edit user response:', response.data);
-  
+
           message.success('Profile updated successfully');
         } catch (error) {
           console.error('Error editing user:', error);
@@ -82,10 +83,6 @@ const ProfilePage = () => {
     });
   };
   
-  
-  
-  
-
   const getUserRole = (role) => {
     switch (role) {
       case 0:
@@ -102,19 +99,22 @@ const ProfilePage = () => {
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     try {
-      const imageUrl = await uploadImageToCloudinary(file); // Upload image to Cloudinary
+      // Set uploading state to true when starting the upload
+      setUploading(true);
+      const imageUrl = await uploadImageToCloudinary(file);
       setFormData({
         ...formData,
-        avatar: imageUrl, // Set the image URL in formData
+        avatar: imageUrl,
       });
+      // Set uploading state to false after the upload is complete
+      setUploading(false);
     } catch (error) {
       console.error('Error uploading image:', error);
+      // Set uploading state to false in case of error
+      setUploading(false);
     }
   };
   
-  
-  
-
   return (
     <div className="container-xl px-4 mt-5 mb-5">
       <CustomNavLinks />
@@ -170,7 +170,10 @@ const ProfilePage = () => {
                   </Col>
                   <Col span={12}>
                     <Form.Item label="Avatar">
-                      <Input type="file" onChange={handleImageUpload} />
+                      <Spin spinning={uploading}>
+                        <Input type="file" onChange={handleImageUpload} />
+                      </Spin>
+                      {uploading && <Progress percent={100} />}
                     </Form.Item>
                   </Col>
                 </Row>
