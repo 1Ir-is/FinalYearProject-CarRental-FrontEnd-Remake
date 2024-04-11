@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Tag, Space, message, Spin } from 'antd';
+import { Table, Button, Tag, Space, message, Spin, Popconfirm  } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
@@ -8,6 +8,7 @@ import axios from 'axios';
 const VehiclePost = () => {
   const [postVehicles, setPostVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const { user } = useAuth();
   const userId = user?.userId;
   const navigate = useNavigate();
@@ -66,6 +67,37 @@ const VehiclePost = () => {
     }
   };
 
+  const handleDelete = async (record) => {
+    try {
+      const response = await axios.delete(`https://localhost:7228/api/Owner/delete-post/${record.id}`);
+      if (response.status === 200) {
+        message.success(response.data);
+        // Remove the deleted post vehicle from the list
+        setPostVehicles(prevState => prevState.filter(item => item.id !== record.id));
+      } else {
+        message.error('Failed to delete post vehicle');
+      }
+    } catch (error) {
+      console.error('Error deleting post vehicle:', error);
+      message.error('Failed to delete post vehicle');
+    }
+  };
+
+  const handleDeleteConfirm = async (record) => {
+    try {
+      setDeleteLoading(true);
+      // Simulate some asynchronous operation (API call, etc.)
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading delay
+
+      // Call the actual delete handler
+      await handleDelete(record);
+    } finally {
+      // Reset the loading state after a timeout
+      setTimeout(() => {
+        setDeleteLoading(false);
+      }, 2000); // Set the timeout duration (in milliseconds)
+    }
+  };
   const columns = [
     {
       title: 'No. of Renters',
@@ -129,11 +161,29 @@ const VehiclePost = () => {
           <Button
             type="primary"
             onClick={() => handleEdit(record)}
-            className={`w-full ${record.editLoading ? 'opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'}`}
+            className={`w-full ${record.editLoading ? 'opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded'}`}
           >
             {record.editLoading ? <Spin /> : 'Edit'}
           </Button>
-          {/* Other actions... */}
+          <Popconfirm
+            title="Are you sure to delete this post?"
+            onConfirm={() => handleDeleteConfirm(record)}
+            okText="Yes"
+            okButtonProps={{ loading: deleteLoading, className: 'bg-sky-500 hover:bg-sky-700 font-bold px-4 rounded' }}
+            cancelText="No"
+            cancelButtonProps={{ className: 'bg-red-400 hover:bg-red-700 font-bold px-4 rounded' }}
+          >
+            <Button 
+              type="danger"
+              className={`w-full ${record.editLoading ? 'opacity-50 cursor-not-allowed' : 'bg-red-500 text-white font-bold px-4 rounded'}`}
+              disabled={deleteLoading}
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+
+
+
         </Space>
       ),
     },

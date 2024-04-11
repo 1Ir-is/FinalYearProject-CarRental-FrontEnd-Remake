@@ -113,55 +113,6 @@ const CarDetails = () => {
               </div>
             </Col>
 
-            <div className="col-4">
-              <div className="mb-md" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div className="b-tit">TÍNH NĂNG</div>
-                <div className="b-tit">THỦ TỤC</div>
-              </div>
-
-              <div className="mb-md">
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <CarOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Điều hoà (A/C)</span>
-                  <IdcardOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Định vị (GPS)</span>
-                  <FileTextOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Bluetooth</span>
-                  <DollarCircleOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Khe cắm USB</span>
-                </div>
-              </div>
-
-              <div className="mb-md">
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <IdcardOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>CMND</span>
-                  <FileTextOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Sổ hộ khẩu</span>
-                  <CarOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Bằng lái</span>
-                  <DollarCircleOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Đặt cọc</span>
-                </div>
-              </div>
-
-              <div className="mb-md">
-                <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                  <DollarCircleOutlined style={{ fontSize: '24px', color: '#f9a826' }} />
-                  <span>Trả sau</span>
-                </div>
-              </div>
-
-              <div className="mb-md">
-                <div className="b-tit">GHI CHÚ</div>
-                <div>
-                  <p>- CMND: Bản gốc</p>
-                  <p>- Sổ hộ khẩu: Bản gốc hoặc KT3</p>
-                  <p>- Bằng lái: B2 trở lên</p>
-                  <p>- Đặt cọc: Xe máy chính chủ + giấy đăng ký xe hoặc đặt cọc tiền mặt tối thiểu 20 triệu</p>
-                </div>
-              </div>
-            </div>
             <Col lg="7" className="mt-5">
               <div className="booking-info mt-5">
                 <h5 className="mb-4 fw-bold ">Booking Information</h5>
