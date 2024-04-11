@@ -6,6 +6,7 @@ import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import AboutPage from "../Pages/AboutPage/About";
 import CarListing from "../Pages/CarListing/CarListing";
 import CarDetails from "../UI/CarDetails/CarDetails";
+
 import Blog from "../Pages/BlogPage/BlogPage";
 import BlogDetails from "../UI/BlogDetails/BlogDetails";
 import Contact from "../Pages/ContactPage/ContactPage";
@@ -30,7 +31,9 @@ export const router = createBrowserRouter([
       { path: "register", element: <RegisterPage /> },
       { path: "about", element: <AboutPage /> },
       { path: "cars", element: <CarListing /> },
-      { path: "cars/:slug", element: <CarDetails /> },
+      { path: "car-details/:id", element: <CarDetails /> },
+
+
       { path: "blogs", element: <Blog /> },
       { path: "blogs/:slug", element: <BlogDetails /> },
       { path: "contact", element: <Contact /> },

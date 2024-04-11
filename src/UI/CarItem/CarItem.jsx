@@ -7,7 +7,9 @@ import "./CarItem.css";
 
 const CarItem = ({ item }) => {
   // Destructure item object to get car details
-  const { image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price, status } = item;
+  const {id, image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price, status } = item;
+
+  console.log(item.id);
 
   // Check if status is true (visible)
   if (!status) {
@@ -45,7 +47,9 @@ const CarItem = ({ item }) => {
           </button>
 
           <button className="w-50 car__item-btn car__btn-details">
-            <Link to={`/cars/${vehicleName}`}>Details</Link>
+            <Link to={`/car-details/${id}`}>Details</Link>
+
+
           </button>
         </div>
       </div>

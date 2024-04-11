@@ -11,7 +11,7 @@ const CarListing = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get('https://localhost:7228/api/Owner/get-all-post-vehicles');
+        const response = await axios.get('https://localhost:7228/api/Home/get-all-post-vehicles');
         if (response.status === 200) {
           setCarList(response.data);
         }
