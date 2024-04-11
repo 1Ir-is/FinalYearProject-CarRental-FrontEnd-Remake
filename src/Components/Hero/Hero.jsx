@@ -9,18 +9,12 @@ import ServicesList from "../../UI/ServiceList/ServiceList";
 import BecomeDriverSection from "../../UI/BecomeDriverSection/BecomeDriveSection";
 import Testimonial from "../../UI/Testimonial/Testimonial";
 import BlogList from "../../UI/BlogList/BlogList";
-import { Button, Modal } from 'antd';
-import TalkJs from '../ChatBox/TalkJs';
-import { MessageOutlined } from '@ant-design/icons';
+
 import carData from "../../assets/data/carData";
 import "./Hero.css";
 
 const Hero = () => {
-  const [isTalkJsVisible, setIsTalkJsVisible] = useState(false);
 
-  const toggleTalkJs = () => {
-    setIsTalkJsVisible(prevState => !prevState);
-  };
 
   return (
     <Helmet title="Home">
@@ -56,20 +50,11 @@ const Hero = () => {
           </Row>
         </Container>
       </section>
-      {/* =========== car offer section ============= */}
-      <section>
-        <Container>
-          <Row>
-            <Col lg="12" className="text-center mb-5">
-              <h6 className="section__subtitle">Come with</h6>
-              <h2 className="section__title">Hot Offers</h2>
-            </Col>
-            {carData.slice(0, 6).map((item) => (
-              <CarItem item={item} key={item.id} />
-            ))}
-          </Row>
-        </Container>
-      </section>
+
+
+
+
+
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />
       {/* =========== testimonial section =========== */}
@@ -85,24 +70,7 @@ const Hero = () => {
         </Container>
       </section>
 
-      {/* =============== talkjs section =========== */}
-      <div style={{ position: 'relative' , backgroundColor: 'white'}}>
-        {/* Your existing code */}
-        <MessageOutlined
-          onClick={toggleTalkJs}
-          style={{ position: 'fixed', bottom: '100px', right: '20px', fontSize: '35px', color: '#1890ff', cursor: 'pointer' }}
-        />
-        <Modal
-          title="Chat"
-          open={isTalkJsVisible}
-          onCancel={toggleTalkJs}
-          footer={null}
-          width={400}
-          style={{ top: 20 }}
-        >
-          <TalkJs />
-        </Modal>
-    </div>
+    
 
 
       {/* =============== blog section =========== */}
