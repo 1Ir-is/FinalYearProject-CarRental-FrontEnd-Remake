@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link, NavLink } from "react-router-dom";
+import { Modal } from "antd";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import avatar from "./avatar-1.png";
 import { useAuth } from "../../Context/useAuth";
 import AccountMenu from "../AccountMenu/AccountMenu";
+import axios from "axios";
 
 import "./Navbar.css";
-
-interface Props {}
 
 const navLinks = [
   {
@@ -22,7 +22,6 @@ const navLinks = [
     path: "/cars",
     display: "Cars",
   },
-
   {
     path: "/blogs",
     display: "Blog",
@@ -33,10 +32,16 @@ const navLinks = [
   },
 ];
 
-const Navbar = (props: Props) => {
+const Navbar = (props) => {
   const { isLoggedIn, user } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const navigate = useNavigate();
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement>(null); // Add type assertion for menuRef
+  const menuRef = useRef(null);
 
   const toggleMenu = () => {
     if (menuRef.current) {
@@ -44,11 +49,40 @@ const Navbar = (props: Props) => {
     }
   };
 
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://localhost:7228/api/Home/find-post-vehicles?search=${searchQuery}`
+      );
+
+      if (response.data.length === 0) {
+        setModalMessage("No cars found matching your search.");
+        setShowModal(true);
+      } else {
+        navigate("/cars", { state: { searchResults: response.data } });
+      }
+    } catch (error) {
+      console.error("Error searching:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      if (searchQuery.trim() === "") {
+        // If search query is empty, navigate to "/cars" directly
+        navigate("/cars");
+      } else {
+        // Otherwise, perform search
+        handleSearch();
+      }
+    }
+  };
 
   return (
-
     <header className="header">
-      {/* ============ header top ============ */}
       <div className="header__top">
         <Container>
           <Row>
@@ -66,14 +100,22 @@ const Navbar = (props: Props) => {
                 {isLoggedIn() ? (
                   <>
                     <AccountMenu />
-                    <div className="hover:text-darkBlue">Welcome, {user?.name}</div>
+                    <div className="hover:text-darkBlue">
+                      Welcome, {user?.name}
+                    </div>
                   </>
                 ) : (
                   <>
-                    <Link to="/login" className="d-flex align-items-center gap-1">
+                    <Link
+                      to="/login"
+                      className="d-flex align-items-center gap-1"
+                    >
                       <i className="ri-login-circle-line"></i> Login
                     </Link>
-                    <Link to="/register" className="d-flex align-items-center gap-1">
+                    <Link
+                      to="/register"
+                      className="d-flex align-items-center gap-1"
+                    >
                       <i className="ri-user-line"></i> Register
                     </Link>
                   </>
@@ -83,15 +125,17 @@ const Navbar = (props: Props) => {
           </Row>
         </Container>
       </div>
-      
-      {/* =============== header middle =========== */}
+
       <div className="header__middle">
         <Container>
           <Row>
             <Col lg="4" md="3" sm="4">
               <div className="logo">
                 <h1>
-                  <Link to="/home" className=" d-flex align-items-center gap-2">
+                  <Link
+                    to="/home"
+                    className=" d-flex align-items-center gap-2"
+                  >
                     <i className="ri-car-line"></i>
                     <span>
                       Rent Car <br /> Service
@@ -108,7 +152,9 @@ const Navbar = (props: Props) => {
                 </span>
                 <div className="header__location-content">
                   <h4>Viet Nam</h4>
-                  <h6 className="text-indigo-900">Da Nang city, Viet Nam</h6>
+                  <h6 className="text-indigo-900">
+                    Da Nang city, Viet Nam
+                  </h6>
                 </div>
               </div>
             </Col>
@@ -141,8 +187,6 @@ const Navbar = (props: Props) => {
         </Container>
       </div>
 
-      {/* ========== main navigation =========== */}
-
       <div className="main__navbar">
         <Container>
           <div className="navigation__wrapper d-flex align-items-center justify-content-between">
@@ -156,7 +200,9 @@ const Navbar = (props: Props) => {
                   <NavLink
                     to={item.path}
                     className={(navClass) =>
-                      navClass.isActive ? "nav__active nav__item" : "nav__item"
+                      navClass.isActive
+                        ? "nav__active nav__item"
+                        : "nav__item"
                     }
                     key={index}
                   >
@@ -168,15 +214,38 @@ const Navbar = (props: Props) => {
 
             <div className="nav__right">
               <div className="search__box">
-                <input type="text" placeholder="Search" />
-                <span>
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+
+
+                <button onClick={handleSearch} disabled={loading}>
                   <i className="ri-search-line"></i>
-                </span>
+                </button>
               </div>
             </div>
           </div>
         </Container>
       </div>
+
+      <Modal
+        title={
+          <span>
+            <i className="ri-error-warning-line" style={{ color: 'orange', marginRight: '8px' }}></i>
+            No Cars Found
+          </span>
+        }
+        visible={showModal}
+        onCancel={() => setShowModal(false)}
+        footer={null}
+      >
+        <p>{modalMessage}</p>
+      </Modal>
+
     </header>
   );
 };

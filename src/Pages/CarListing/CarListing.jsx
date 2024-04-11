@@ -4,16 +4,24 @@ import Helmet from "../../Components/Helmet/Helmet";
 import CommonSection from "../../UI/CommonSection/CommonSection";
 import CarItem from "../../UI/CarItem/CarItem";
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const CarListing = () => {
   const [carList, setCarList] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get('https://localhost:7228/api/Home/get-all-post-vehicles');
-        if (response.status === 200) {
-          setCarList(response.data);
+        if (location.state && location.state.searchResults) {
+          // If search results are present in the location state, set carList to search results
+          setCarList(location.state.searchResults);
+        } else {
+          // Otherwise, fetch all cars
+          const response = await axios.get('https://localhost:7228/api/Home/get-all-post-vehicles');
+          if (response.status === 200) {
+            setCarList(response.data);
+          }
         }
       } catch (error) {
         console.error('Error fetching cars:', error);
@@ -21,7 +29,7 @@ const CarListing = () => {
     };
 
     fetchCars();
-  }, []);
+  }, [location]);
 
   return (
     <Helmet title="Cars">

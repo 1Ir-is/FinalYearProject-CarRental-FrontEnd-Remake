@@ -7,7 +7,7 @@ import BookingForm from "../BookingForm/BookingForm";
 import PaymentMethod from "../PaymentMethod/PaymentMethod";
 import { TeamOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import { CarOutlined, IdcardOutlined, FileTextOutlined, DollarCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
+
 
 
 const CarDetails = () => {
