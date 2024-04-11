@@ -9,7 +9,7 @@ const CarItem = ({ item }) => {
   // Destructure item object to get car details
   const {id, image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price, status } = item;
 
-  console.log(item.id);
+  
 
   // Check if status is true (visible)
   if (!status) {
@@ -37,13 +37,14 @@ const CarItem = ({ item }) => {
             <span className="d-flex align-items-center gap-2">
               <i className="ri-settings-2-line" style={{ fontSize: '30px' }}></i> <span style={{ fontSize: '17px' }}>{vehicleType}</span>
             </span>
-            <span className="d-flex align-items-center gap-2">
+            <span className="flex items-center gap-2 text-yellow-400">
               <TeamOutlined style={{ fontSize: '30px' }} /> <span style={{ fontSize: '17px' }}>{vehicleSeat}</span>
             </span>
+
           </div>
 
           <button className="w-50 car__item-btn car__btn-rent">
-            <Link to={`/cars/${vehicleName}`}>Rent</Link>
+            <Link to={`/cars/${vehicleName}`}>Follow</Link>
           </button>
 
           <button className="w-50 car__item-btn car__btn-details">
