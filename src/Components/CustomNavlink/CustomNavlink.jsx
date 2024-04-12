@@ -24,7 +24,7 @@ const CustomNavLinks = () => {
 
     return (
         <nav className="nav nav-borders">
-            <NavLink exact to="/profile" className="nav-link">
+            <NavLink exact to={`/profile/${user.userId}`} className="nav-link">
                 Profile
             </NavLink>
             <NavLink to="/rented-car" className="nav-link">
