@@ -21,7 +21,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicle/${postId}`);
+        const response = await axios.get(`https://localhost:7228/api/Home/get-post-vehicle/${postId}`);
         setPostData(response.data);
       } catch (error) {
         console.error('Error fetching post data:', error);
@@ -154,7 +154,7 @@ const EditPost = () => {
           {/* Confirmation Modal */}
       <Modal
         title="Confirmation"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700', loading: loading }} // Pass loading prop to the OK button

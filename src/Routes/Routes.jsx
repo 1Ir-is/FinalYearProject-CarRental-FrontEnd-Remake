@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
       { path: "favorite-list", element: <FavoriteVehicleList /> },
       
       // Protected route for owner registration
-      { path: "register-owner", element: <OwnerProtectedRoute><OwnerPage /></OwnerProtectedRoute> },
+      { path: "register-owner", element: <OwnerPage />},
 
       // For owner - Protected routes
       { path: "vehicle-post", element: <OwnerProtectedRoute><VehiclePost /></OwnerProtectedRoute> },

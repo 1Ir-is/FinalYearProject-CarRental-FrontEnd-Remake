@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Tag, Space, message, Spin, Popconfirm  } from 'antd';
+import { Table, Button, Tag, Space, message, Spin, Popconfirm } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
@@ -98,6 +98,7 @@ const VehiclePost = () => {
       }, 2000); // Set the timeout duration (in milliseconds)
     }
   };
+
   const columns = [
     {
       title: 'No. of Renters',
@@ -149,8 +150,8 @@ const VehiclePost = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => (
-        <Tag color={status === 'Active' ? 'green' : 'red'}>{status}</Tag>
+      render: (status, record) => (
+        <Tag color={status ? 'red' : 'green'}>{status ? 'Active' : 'Hidden'}</Tag>
       ),
     },
     {
@@ -181,14 +182,32 @@ const VehiclePost = () => {
               Delete
             </Button>
           </Popconfirm>
-
-
-
         </Space>
       ),
     },
   ];
-  
+
+  useEffect(() => {
+    // Subscribe to status changes and update the status tag
+    const updateStatusTag = () => {
+      const interval = setInterval(async () => {
+        try {
+          const response = await axios.get(`https://localhost:7228/api/Owner/get-post-vehicles-by-user/${userId}`);
+          if (response.status === 200) {
+            setPostVehicles(response.data);
+          }
+        } catch (error) {
+          console.error('Error updating status tag:', error);
+        }
+      }, 2500); // Fetch updated data every 5 seconds
+      return () => clearInterval(interval);
+    };
+
+    if (userId) {
+      updateStatusTag();
+    }
+  }, [userId]);
+
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />

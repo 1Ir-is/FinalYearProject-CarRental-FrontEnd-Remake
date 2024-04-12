@@ -20,7 +20,9 @@ const CarListing = () => {
           // Otherwise, fetch all cars
           const response = await axios.get('https://localhost:7228/api/Home/get-all-post-vehicles');
           if (response.status === 200) {
-            setCarList(response.data);
+            // Filter out cars based on their status (visibility)
+            const visibleCars = response.data.filter(car => car.status === true);
+            setCarList(visibleCars);
           }
         }
       } catch (error) {
@@ -38,22 +40,28 @@ const CarListing = () => {
       <section>
         <Container>
           <Row>
-            <Col lg="12">
-              <div className="d-flex align-items-center gap-3 mb-5">
-                <span className="d-flex align-items-center gap-2">
-                  <i className="ri-sort-asc"></i> Sort By
-                </span>
-                <select className="box-border h-10 w-32 border-2">
-                  <option>Select</option>
-                  <option value="low">Low to High</option>
-                  <option value="high">High to Low</option>
-                </select>
-              </div>
-            </Col>
+            {carList.length === 0 ? null : (
+              <Col lg="12">
+                <div className="d-flex align-items-center gap-3 mb-5">
+                  <span className="d-flex align-items-center gap-2">
+                    <i className="ri-sort-asc"></i> Sort By
+                  </span>
+                  <select className="box-border h-10 w-32 border-2">
+                    <option>Select</option>
+                    <option value="low">Low to High</option>
+                    <option value="high">High to Low</option>
+                  </select>
+                </div>
+              </Col>
+            )}
 
-            {carList.map((item) => (
-              <CarItem item={item} key={item.id} />
-            ))}
+            {carList.length === 0 ? (
+                 <Col lg="12" className="text-center text-gray-500 mt-4 text-2xl">No cars available yet</Col>
+            ) : (
+              carList.map((item) => (
+                <CarItem item={item} key={item.id} />
+              ))
+            )}
           </Row>
         </Container>
       </section>

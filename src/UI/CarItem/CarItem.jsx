@@ -17,6 +17,8 @@ const CarItem = ({ item }) => {
     return null;
   }
 
+  console.log(status);
+
   return (
     <Col lg="4" md="4" sm="6" className="mb-5">
       <div className="car__item">
