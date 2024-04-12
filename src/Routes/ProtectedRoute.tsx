@@ -15,3 +15,15 @@ const ProtectedRoute = ({ children }: Props) => {
 };
 
 export default ProtectedRoute;
+
+// ProtectedRoute for owner-specific routes
+export const OwnerProtectedRoute = ({ children }: Props) => {
+  const location = useLocation();
+  const { isLoggedIn, user } = useAuth();
+  const isOwner = user && user.role === 2; // Check if user is an owner
+  return isLoggedIn() && isOwner ? (
+    <>{children}</>
+  ) : (
+    <Navigate to="/access-denied" state={{ from: location }} replace /> // Redirect to 403 page for unauthorized access
+  );
+};
