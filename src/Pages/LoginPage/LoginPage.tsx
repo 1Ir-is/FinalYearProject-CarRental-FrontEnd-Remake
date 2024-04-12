@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate,  } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -30,7 +30,7 @@ const validation = Yup.object().shape({
 
 
 const LoginPage = (props: Props) => {
-  const { loginUser } = useAuth();
+  const { loginUser, loginUserGoogle } = useAuth();
   const {
     register,
     handleSubmit,
@@ -40,33 +40,41 @@ const LoginPage = (props: Props) => {
   const handleLogin = (form: LoginFormsInputs) => {
     loginUser(form.Email, form.password);
   };
+  
+  const navigate = useNavigate();
+
+  
 
 
   const handleGoogleLoginSuccess = async (credentialResponse: any) => {
     const token = credentialResponse.credential;
     
     try {
-        const response = await axios.post('https://localhost:7228/api/auth/google-login', { token });
-        const userData = response.data;
-        
-        // Handle user data as needed
-        console.log('User data:', userData);
+      const response = await axios.post('https://localhost:7228/api/auth/google-login', { token });
+      const userData = response.data;
+     
+      // Handle user data as needed
+      console.log('User data:', userData);
+
+  
+      loginUserGoogle(userData.email);
+      
     } catch (error) {
-        console.error('Error logging in with Google:', error);
+      console.error('Error logging in with Google:', error);
+    }
+  };
+
+  const decodeJWT = (token: string) => {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const decodedToken = JSON.parse(atob(base64));
+        return decodedToken;
+    } catch (error) {
+        console.error('Error decoding JWT token:', error);
+        return null;
     }
 };
-
-//   const decodeJWT = (token: string) => {
-//     try {
-//         const base64Url = token.split('.')[1];
-//         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-//         const decodedToken = JSON.parse(atob(base64));
-//         return decodedToken;
-//     } catch (error) {
-//         console.error('Error decoding JWT token:', error);
-//         return null;
-//     }
-// };
 
   return (
     <section className="login-section">

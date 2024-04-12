@@ -6,6 +6,7 @@ const api = "https://localhost:7228/api/";
 
 export const loginAPI = async (email: string, password: string) => {
   try {
+  
     const data = await axios.post<UserProfileToken>(api + "Auth/login", {
       email: email,
       password: password,
@@ -15,6 +16,20 @@ export const loginAPI = async (email: string, password: string) => {
     handleError(error);
   }
 };
+
+export const loginAPIGoogle = async (googleEmail: string) => {
+  try {
+    const data = await axios.post<UserProfileToken>(api + "Auth/login-with-google", null, {
+      params: {
+        googleEmail: googleEmail
+      }
+    });
+    return data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 export const registerAPI = async (
   email: string,
   name: string, 

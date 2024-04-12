@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { UserProfile } from "../Models/User";
 import { useNavigate } from "react-router-dom";
-import { loginAPI, registerAPI } from "../Services/AuthService";
+import { loginAPI, loginAPIGoogle, registerAPI } from "../Services/AuthService";
 import { editUserAPI } from "../Services/UserService";
 import { toast } from "react-toastify";
 import React from "react";
@@ -13,6 +13,7 @@ type UserContextType = {
   token: string | null;
   registerUser: (email: string, name: string, password: string) => void;
   loginUser: (email: string, password: string) => void;
+  loginUserGoogle: (email: string) => void;
   editUser: (formData: FormData) => void;
   logout: () => void;
   isLoggedIn: () => boolean;
@@ -79,11 +80,38 @@ export const UserProvider = ({ children }: Props) => {
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
           setUser(userObj!);
+          
           message.success("Login Success!");
           navigate("/home");
         }
       })
       .catch((e) => toast.warning("Server error occurred"));
+  };
+
+  const loginUserGoogle = async (email: string) => {
+    try {
+      // Use the loginAPIGoogle function to log in with Google
+      const res = await loginAPIGoogle(email);
+      if (res) {
+        localStorage.setItem("token", res?.data.token);
+        const userObj: UserProfile = {
+          userId: res?.data.userId,
+          name: res?.data.name,
+          email: res?.data.email,
+          address: res?.data.address,
+          phone: res?.data.phone,
+          role: res?.data.role,
+        };
+        localStorage.setItem("user", JSON.stringify(userObj));
+        setToken(res?.data.token!);
+        setUser(userObj!);
+        message.success("Login with Google Success!");
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Error logging in with Google:", error);
+      message.error("Failed to login with Google. Please try again.");
+    }
   };
 
   const editUser = async (formData: FormData) => {
@@ -141,6 +169,7 @@ export const UserProvider = ({ children }: Props) => {
         logout,
         isLoggedIn,
         setUser,
+        loginUserGoogle,
       }}
     >
       {isReady ? children : null}

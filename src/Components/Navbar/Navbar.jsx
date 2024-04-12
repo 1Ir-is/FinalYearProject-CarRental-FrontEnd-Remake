@@ -40,6 +40,7 @@ const Navbar = (props) => {
   const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
   const [modalVisible, setModalVisible] = useState(false);
+  
 
   const menuRef = useRef(null);
 
@@ -97,7 +98,7 @@ const Navbar = (props) => {
 
             <Col lg="6" md="6" sm="6">
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
-                {isLoggedIn() ? (
+              {isLoggedIn() ? (
                   <>
                     <AccountMenu />
                     <div className="hover:text-darkBlue">
