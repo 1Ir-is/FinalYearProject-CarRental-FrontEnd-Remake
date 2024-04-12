@@ -9,6 +9,7 @@ import Footer from "./Components/Footer/Footer";
 import TalkJs from './Components/ChatBox/TalkJs'; // Import TalkJs here
 import { Button, Modal } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
   const [isTalkJsVisible, setIsTalkJsVisible] = useState<boolean>(false);
@@ -17,6 +18,7 @@ function App() {
     setIsTalkJsVisible(prevState => !prevState);
   };
   return (
+    <GoogleOAuthProvider clientId="638694555637-qubfimig6enoofibrod54okt690pa4kl.apps.googleusercontent.com">
     <UserProvider>
         <Navbar />
         <Outlet />
@@ -41,6 +43,7 @@ function App() {
         <ToastContainer />
         <Footer />
     </UserProvider>
+    </GoogleOAuthProvider>
   );
 }
 

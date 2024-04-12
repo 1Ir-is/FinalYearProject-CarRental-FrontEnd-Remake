@@ -5,8 +5,10 @@ import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
+import { GoogleLogin } from '@react-oauth/google';
 
 import "./LoginPage.css";
+import axios from "axios";
 
 type Props = {};
 
@@ -25,6 +27,8 @@ const validation = Yup.object().shape({
     ),
 });
 
+
+
 const LoginPage = (props: Props) => {
   const { loginUser } = useAuth();
   const {
@@ -36,6 +40,34 @@ const LoginPage = (props: Props) => {
   const handleLogin = (form: LoginFormsInputs) => {
     loginUser(form.Email, form.password);
   };
+
+
+  const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+    const token = credentialResponse.credential;
+    
+    try {
+        const response = await axios.post('https://localhost:7228/api/auth/google-login', { token });
+        const userData = response.data;
+        
+        // Handle user data as needed
+        console.log('User data:', userData);
+    } catch (error) {
+        console.error('Error logging in with Google:', error);
+    }
+};
+
+//   const decodeJWT = (token: string) => {
+//     try {
+//         const base64Url = token.split('.')[1];
+//         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+//         const decodedToken = JSON.parse(atob(base64));
+//         return decodedToken;
+//     } catch (error) {
+//         console.error('Error decoding JWT token:', error);
+//         return null;
+//     }
+// };
+
   return (
     <section className="login-section">
     <Container>
@@ -78,6 +110,15 @@ const LoginPage = (props: Props) => {
             <p className="text-center mt-3">
               Don’t have an account yet? <Link to="/register">Sign up</Link>
             </p>
+
+            <div className="flex justify-center items-center">
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+              />
+            </div>
           </div>
         </Col>
       </Row>
