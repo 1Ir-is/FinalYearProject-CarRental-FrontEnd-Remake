@@ -99,6 +99,11 @@ const VehiclePost = () => {
     }
   };
 
+  const handleViewList = (record) => {
+    // Navigate to the RenterList component with the vehicleId as a URL parameter
+    navigate(`/create-post/renter-list/${record.id}`);
+  };
+
   const columns = [
     {
       title: 'No. of Renters',
@@ -182,6 +187,13 @@ const VehiclePost = () => {
               Delete
             </Button>
           </Popconfirm>
+          <Button
+            type="primary"
+            onClick={() => handleViewList(record)}
+            className={`w-full bg-green-500 hover:bg-green-700 text-white font-bold px-4 rounded`}
+          >
+            View List
+          </Button>
         </Space>
       ),
     },

@@ -30,7 +30,7 @@ const CustomNavLinks = () => {
             <NavLink to="/rented-car" className="nav-link">
                 Car have been rented
             </NavLink>
-            <NavLink to="/favorite-list" className="nav-link">
+            <NavLink to={`/followed-cars/${user.userId}`}  className="nav-link">
                 Favorite List
             </NavLink>
             {/* Conditional rendering for owner */}

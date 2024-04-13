@@ -20,6 +20,8 @@ import EditPost from "../Pages/EditPost/EditPost";
 import ChangePasswordPage from "../Pages/ChangePassword/ChangePassword";
 import { OwnerProtectedRoute } from "./ProtectedRoute";
 import ForbiddenPage from "../Pages/ForbiddenPage/ForbiddenPage";
+import RenterList from "../Pages/RenterList/RenterList";
+import FavoriteList from "../Pages/FavoriteListPage/FavoriteList";
 
 import { Navigate } from "react-router-dom";
 
@@ -43,8 +45,8 @@ export const router = createBrowserRouter([
       { path: "blogs/:slug", element: <BlogDetails /> },
       { path: "contact", element: <Contact /> },
       { path: "profile/:userId", element: <ProfilePage /> }, 
+      { path: "followed-cars/:userId", element: <FavoriteList /> },
       { path: "rented-car", element: <RentedCarView /> },
-      { path: "favorite-list", element: <FavoriteVehicleList /> },
       
       // Protected route for owner registration
       { path: "register-owner", element: <OwnerPage />},
@@ -53,7 +55,7 @@ export const router = createBrowserRouter([
       { path: "vehicle-post", element: <OwnerProtectedRoute><VehiclePost /></OwnerProtectedRoute> },
       { path: "create-post", element: <OwnerProtectedRoute><CreatePostPage /></OwnerProtectedRoute> },
       { path: "edit-post/:postId", element: <OwnerProtectedRoute><EditPost /></OwnerProtectedRoute> },
-
+     
       // 403 route
       { path: "access-denied", element: <ForbiddenPage /> },
       { path: "*", element: <Navigate to="/access-denied" replace /> },
