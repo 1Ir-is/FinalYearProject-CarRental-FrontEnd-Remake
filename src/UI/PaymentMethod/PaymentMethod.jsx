@@ -35,9 +35,7 @@ const PaymentMethod = () => {
 
         <img src={paypal} alt="" />
       </div>
-      <div className="payment text-end mt-5">
-        <button>Reserve Now</button>
-      </div>
+
     </>
   );
 };
