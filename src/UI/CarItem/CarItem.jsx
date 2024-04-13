@@ -73,10 +73,11 @@ const CarItem = ({ item }) => {
             </span>
           </div>
 
-          <Button className="w-50 car__item-btn car__btn-rent" onClick={handleFollow}>
-            {isFollowing ? 'Unfollow' : 'Follow'}
-          </Button>
 
+
+          <button className="w-50 car__item-btn car__btn-rent text-white" onClick={handleFollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </button>
           <button className="w-50 car__item-btn car__btn-details">
             <Link to={`/car-details/${id}`}>Details</Link>
           </button>

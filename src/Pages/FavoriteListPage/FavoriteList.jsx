@@ -14,11 +14,8 @@ const FavoriteList = () => {
     const fetchFollowedVehicles = async () => {
       try {
         const response = await axios.get(`https://localhost:7228/api/Home/get-all-follow-vehicles/${userId}`);
-        // Simulate a delay before setting loading to false
-        setTimeout(() => {
-          setFollowedVehicles(response.data);
-          setLoading(false);
-        }, 1500); // Simulated delay of 1.5 seconds
+        setFollowedVehicles(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching followed vehicles:', error);
         setLoading(false);
@@ -27,6 +24,23 @@ const FavoriteList = () => {
     };
     fetchFollowedVehicles();
   }, [userId]);
+
+  const handleFollow = async (postId) => {
+    try {
+      const response = await axios.post(`https://localhost:7228/api/Home/${followedVehicles.some(vehicle => vehicle.postId === postId) ? 'unfollow-vehicle' : 'follow-vehicle'}`, {
+        postVehicleId: postId,
+        userId: userId,
+      });
+      
+      if (response.status === 200) {
+        // Update the followed vehicles state immediately after the follow/unfollow action
+        const updatedFollowedVehicles = await axios.get(`https://localhost:7228/api/Home/get-all-follow-vehicles/${userId}`);
+        setFollowedVehicles(updatedFollowedVehicles.data);
+      }
+    } catch (error) {
+      console.error('Error following/unfollowing vehicle:', error);
+    }
+  };
 
   const columns = [
     {
@@ -60,43 +74,67 @@ const FavoriteList = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="primary" danger >
-          Unfollow
+        <Button 
+          type="primary" 
+          danger 
+          onClick={() => handleFollow(record.postId)}
+        >
+          {followedVehicles.some(vehicle => vehicle.postId === record.postId) ? 'Unfollow' : 'Follow'}
         </Button>
       ),
     },
   ];
-  
+
+  useEffect(() => {
+    // Subscribe to status changes and update the status tag
+    const updateStatusTag = () => {
+      const interval = setInterval(async () => {
+        try {
+          const response = await axios.get(`https://localhost:7228/api/Home/get-all-follow-vehicles/${userId}`);
+          if (response.status === 200) {
+            setFollowedVehicles(response.data);
+          }
+        } catch (error) {
+          console.error('Error updating status tag:', error);
+        }
+      }, 2500); // Fetch updated data every 5 seconds
+      return () => clearInterval(interval);
+    };
+
+    if (userId) {
+      updateStatusTag();
+    }
+  }, [userId]);
 
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
-
       <CustomNavLinks />
       <hr className="mt-0 mb-4"/>
-
       <div className="card shadow mb-4">
         <div className="card-header py-3">
             <h6 className="m-0 font-weight-bold text-primary">Favorite List</h6>
         </div>
-
         <div className="card-body">
-            {loading ? (
+          {loading ? (
             <div className="text-center">
               <Spin size="large" />
             </div>
           ) : (
-            <Table columns={columns} dataSource={followedVehicles.map(vehicle => ({
-              key: vehicle.id,
-              image: vehicle.postVehicle.image,
-              vehicleName: vehicle.postVehicle.vehicleName,
-              address: vehicle.postVehicle.address,
-              price: vehicle.postVehicle.price,
-              vehicleType: vehicle.postVehicle.vehicleType
-            }))} />
+            <Table 
+              columns={columns} 
+              dataSource={followedVehicles.map(vehicle => ({
+                key: vehicle.postId,
+                image: vehicle.postVehicle.image,
+                vehicleName: vehicle.postVehicle.vehicleName,
+                address: vehicle.postVehicle.address,
+                price: vehicle.postVehicle.price,
+                vehicleType: vehicle.postVehicle.vehicleType,
+                postId: vehicle.postId
+              }))} 
+            />
           )}
         </div>
       </div>
-    
     </div>
   );
 };
