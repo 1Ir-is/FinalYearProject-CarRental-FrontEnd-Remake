@@ -110,6 +110,18 @@ const CarDetails = () => {
                   <EnvironmentOutlined style={{ color: "#f9a826", fontSize: "24px" }} />
                   {carDetails.address}
                 </div>
+
+                <div className="section__description text-lg mt-3">
+                              <iframe
+                className="thumbnail-img"
+                frameBorder="0"
+                style={{ border: "0" }}
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
+                allowFullScreen
+              ></iframe>
+
+                </div>
               </div>
             </Col>
 
