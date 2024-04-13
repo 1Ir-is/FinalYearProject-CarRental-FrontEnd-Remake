@@ -24,7 +24,25 @@ const CarDetails = () => {
   const { user } = useAuth();
   const userId = user?.userId;
   const userName = user?.name;
-  const userAvatar = user?.avatar;
+  const [userAvatar, setUserAvatar] = useState(null)
+
+
+useEffect(() => {
+    // Fetch user's avatar from backend API
+    const fetchUserAvatar = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`); // Adjust the endpoint URL
+        setUserAvatar(response.data.avatar); // Set user's avatar URL in state
+      } catch (error) {
+        console.error('Error fetching user avatar:', error);
+      }
+    };
+
+    if (user) {
+      fetchUserAvatar();
+    }
+  }, [user]);
+
 
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -61,21 +79,22 @@ const CarDetails = () => {
         trustPoint,
         content: comment,
         postVehicleId: carDetails.id,
-        // Add the name of the user who made the review
-        userName: userName,
       });
   
+      // Assuming the server responds with the complete review object including all necessary fields
       const newReview = {
         id: response.data.id,
+        avatar: userAvatar,
+        author: userName,
         rating,
         trustPoint,
         content: comment,
-        userName, // Include the user's name in the review object
-        userAvatar, // Assuming userAvatar is already defined in your component
       };
   
+      // Update the reviews state by prepending the new review
       setReviews([newReview, ...reviews]);
   
+      // Clear the form fields
       setComment("");
       setRating(0);
       setTrustPoint(0);
@@ -84,6 +103,8 @@ const CarDetails = () => {
       console.error("Error submitting review:", error);
     }
   };
+  
+  
   
 
   if (loading) {
@@ -161,14 +182,15 @@ const CarDetails = () => {
                 </div>
 
                 <div className="section__description text-lg mt-3">
-                  <iframe
-                    className="thumbnail-img"
-                    frameBorder="0"
-                    style={{ border: "0" }}
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
-                    allowFullScreen
-                  ></iframe>
+                              <iframe
+                className="thumbnail-img"
+                frameBorder="0"
+                style={{ border: "0" }}
+                referrerPolicy="no-referrer-when-downgrade"
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
+                allowFullScreen
+              ></iframe>
+
                 </div>
               </div>
             </Col>
@@ -209,33 +231,33 @@ const CarDetails = () => {
                 <InputNumber min={1} max={10} value={trustPoint} onChange={(value) => setTrustPoint(value)} />
               </Form.Item>
               <Form.Item>
-                <Button
-                  htmlType="submit"
-                  onClick={handleSubmitReview}
-                  type="primary"
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded"
-                >
-                  Submit Review
-                </Button>
+              <Button
+                htmlType="submit"
+                onClick={handleSubmitReview}
+                type="primary"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded"
+              >
+                Submit Review
+              </Button>
+
               </Form.Item>
             </Col>
           </Row>
           <Divider />
           <Row>
-            <Col span={24}>
-              <h3>Reviews</h3>
-              {reviews && reviews.map((review) => (
-                <div key={review.id} style={{ marginBottom: "16px" }}>
-                  {/* Display the avatar of the user who made the review */}
-                  <Avatar src={review.userAvatar}></Avatar>
-                  {/* Display the name of the user who made the review */}
-                  <p>{review.userName}</p>
-                  <p>Rating: {review.rating}</p>
-                  <p>Trust Point: {review.trustPoint}</p>
-                  <p>{review.content}</p>
-                </div>
-              ))}
-            </Col>
+          <Col span={24}>
+            <h3>Reviews</h3>
+            {reviews && reviews.map((review) => (
+              <div key={review.id} style={{ marginBottom: "16px" }}>
+                <Avatar src={userAvatar}></Avatar>
+                {userName && <p key={`author-${review.id}`}>{userName}</p>}
+                <p>Rating: {review.rating}</p>
+                <p>Trust Point: {review.trustPoint}</p>
+                <p>{review.content}</p>
+              </div>
+            ))}
+          </Col>
+
           </Row>
         </Container>
       </section>
