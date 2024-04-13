@@ -39,6 +39,8 @@ export default function AccountMenu() {
       fetchUserAvatar();
     }
   }, [user]);
+
+  
   const { logout } = useAuth();
 
   return (

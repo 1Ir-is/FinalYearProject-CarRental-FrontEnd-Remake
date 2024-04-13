@@ -61,8 +61,6 @@ export const UserProvider = ({ children }: Props) => {
       toast.error("Failed to register user. Please try again.");
     }
   };
-  
-  
 
   const loginUser = async (email: string, password: string) => {
     await loginAPI(email, password)
@@ -75,12 +73,12 @@ export const UserProvider = ({ children }: Props) => {
             email: res?.data.email,
             address: res?.data.address,
             phone: res?.data.phone,
-            role: res?.data.role, // Include the role property
+            role: res?.data.role,
+            avatar: res?.data.avatar // Include the avatar property
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
           setUser(userObj!);
-          
           message.success("Login Success!");
           navigate("/home");
         }
@@ -90,7 +88,6 @@ export const UserProvider = ({ children }: Props) => {
 
   const loginUserGoogle = async (email: string) => {
     try {
-      // Use the loginAPIGoogle function to log in with Google
       const res = await loginAPIGoogle(email);
       if (res) {
         localStorage.setItem("token", res?.data.token);
@@ -101,6 +98,7 @@ export const UserProvider = ({ children }: Props) => {
           address: res?.data.address,
           phone: res?.data.phone,
           role: res?.data.role,
+          avatar: res?.data.avatar // Include the avatar property
         };
         localStorage.setItem("user", JSON.stringify(userObj));
         setToken(res?.data.token!);
@@ -124,7 +122,8 @@ export const UserProvider = ({ children }: Props) => {
           email: user?.email,
           phone: formData.get("phone") as string,
           address: formData.get("address") as string,
-          role: user?.role, // Keep the role from the existing user
+          role: user?.role,
+          avatar: user?.avatar // Preserve the avatar property
         };
 
         setUser(editedUserData);

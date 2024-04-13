@@ -6,6 +6,7 @@ export type UserProfileToken = {
   phone: string;
   token: string;
   role: number; // Add role property
+  avatar: string; // Add avatar property
 };
 
 export interface UserProfile {
@@ -15,5 +16,5 @@ export interface UserProfile {
   phone?: string;
   address?: string;
   role?: number; // Add role property
+  avatar?: string; // Add avatar property
 }
-
