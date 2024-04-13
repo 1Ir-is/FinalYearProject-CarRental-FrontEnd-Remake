@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Col, Button } from "reactstrap";
+import { message as antMessage } from "antd";
 import { Link } from "react-router-dom";
 import { TeamOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -8,26 +9,43 @@ import { useAuth } from "../../Context/useAuth";
 import "./CarItem.css";
 
 const CarItem = ({ item }) => {
-  // Destructure item object to get car details
   const { id, image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price, status } = item;
-  const [isFollowing, setIsFollowing] = useState(false);
   const { user } = useAuth();
+  const userId = user?.userId;
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    const followedVehicles = JSON.parse(localStorage.getItem('followedVehicles')) || [];
+    setIsFollowing(followedVehicles.some(entry => entry.userId === userId && entry.vehicleId === id));
+  }, [id, userId]);
 
   const handleFollow = async () => {
     try {
-      const response = await axios.post("https://localhost:7228/api/Home/follow-vehicle", {
-        postVehicleId: id,
-        userId: user.userId,
-      });
-
-      console.log(user.userId, id);
-
-      setIsFollowing(true);
-      console.log(response.data);
+      let followedVehicles = JSON.parse(localStorage.getItem('followedVehicles')) || [];
+      const isCurrentlyFollowing = followedVehicles.some(entry => entry.userId === userId && entry.vehicleId === id);
+      if (isCurrentlyFollowing) {
+        // Unfollow the vehicle if already following
+        await axios.post("https://localhost:7228/api/Home/unfollow-vehicle", {
+          postVehicleId: id,
+          userId: userId,
+        });
+        followedVehicles = followedVehicles.filter(entry => !(entry.userId === userId && entry.vehicleId === id));
+        setIsFollowing(false);
+        antMessage.success('Unfollow successful!');
+      } else {
+        // Follow the vehicle if not already following
+        await axios.post("https://localhost:7228/api/Home/follow-vehicle", {
+          postVehicleId: id,
+          userId: userId,
+        });
+        followedVehicles.push({ userId: userId, vehicleId: id });
+        setIsFollowing(true);
+        antMessage.success('Follow successful!');
+      }
+      localStorage.setItem('followedVehicles', JSON.stringify(followedVehicles));
     } catch (error) {
-      console.error('Error following vehicle:', error);
+      console.error('Error following/unfollowing vehicle:', error);
     }
-
   };
 
   return (
@@ -55,11 +73,9 @@ const CarItem = ({ item }) => {
             </span>
           </div>
 
-          {isFollowing ? (
-            <Button className="w-50 car__item-btn car__btn-rent" >Unfollow</Button>
-          ) : (
-            <Button className="w-50 car__item-btn car__btn-rent" onClick={handleFollow}>Follow</Button>
-          )}
+          <Button className="w-50 car__item-btn car__btn-rent" onClick={handleFollow}>
+            {isFollowing ? 'Unfollow' : 'Follow'}
+          </Button>
 
           <button className="w-50 car__item-btn car__btn-details">
             <Link to={`/car-details/${id}`}>Details</Link>
