@@ -25,29 +25,18 @@ const FavoriteList = () => {
     fetchFollowedVehicles();
   }, [userId]);
 
-  const handleFollow = async (postId) => {
-    try {
-      const response = await axios.post(`https://localhost:7228/api/Home/${followedVehicles.some(vehicle => vehicle.postId === postId) ? 'unfollow-vehicle' : 'follow-vehicle'}`, {
-        postVehicleId: postId,
-        userId: userId,
-      });
-      
-      if (response.status === 200) {
-        // Update the followed vehicles state immediately after the follow/unfollow action
-        const updatedFollowedVehicles = await axios.get(`https://localhost:7228/api/Home/get-all-follow-vehicles/${userId}`);
-        setFollowedVehicles(updatedFollowedVehicles.data);
-      }
-    } catch (error) {
-      console.error('Error following/unfollowing vehicle:', error);
-    }
-  };
-
   const columns = [
     {
       title: "Image",
       dataIndex: "image",
       key: "image",
-      render: (image) => <img src={image} alt="Car" style={{ width: '100px', height: '100px' }} />,
+      render: (image) => (
+        <img
+          src={image}
+          alt="Car"
+          style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+        />
+      ),
     },
     {
       title: "Vehicle Name",
@@ -60,30 +49,28 @@ const FavoriteList = () => {
       key: "address",
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (price) => `$${price}.00`,
-    },
-    {
       title: "Vehicle Type",
       dataIndex: "vehicleType",
       key: "vehicleType",
     },
     {
-      title: "Action",
-      key: "action",
-      render: (_, record) => (
-        <Button 
-          type="primary" 
-          danger 
-          onClick={() => handleFollow(record.postId)}
-        >
-          {followedVehicles.some(vehicle => vehicle.postId === record.postId) ? 'Unfollow' : 'Follow'}
-        </Button>
-      ),
+      title: "Vehicle Fuel",
+      dataIndex: "vehicleFuel",
+      key: "vehicleFuel",
+    },
+    {
+      title: "Vehicle Seat",
+      dataIndex: "vehicleSeat",
+      key: "vehicleSeat",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => `$${price}.00`,
     },
   ];
+  
 
   useEffect(() => {
     // Subscribe to status changes and update the status tag
@@ -107,7 +94,8 @@ const FavoriteList = () => {
   }, [userId]);
 
   return (
-    <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
+    <>
+      <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />
       <hr className="mt-0 mb-4"/>
       <div className="card shadow mb-4">
@@ -120,6 +108,8 @@ const FavoriteList = () => {
               <Spin size="large" />
             </div>
           ) : (
+
+            <div className="table-responsive">
             <Table 
               columns={columns} 
               dataSource={followedVehicles.map(vehicle => ({
@@ -129,13 +119,18 @@ const FavoriteList = () => {
                 address: vehicle.postVehicle.address,
                 price: vehicle.postVehicle.price,
                 vehicleType: vehicle.postVehicle.vehicleType,
+                vehicleFuel: vehicle.postVehicle.vehicleFuel,
+                vehicleSeat: vehicle.postVehicle.vehicleSeat,
                 postId: vehicle.postId
               }))} 
             />
+             </div>
           )}
         </div>
       </div>
     </div>
+    </>
+    
   );
 };
 

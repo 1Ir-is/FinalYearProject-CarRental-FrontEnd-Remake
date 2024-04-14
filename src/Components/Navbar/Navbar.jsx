@@ -215,20 +215,21 @@ const Navbar = (props) => {
 
             <div className="nav__right">
               <div className="search__box">
-              <input
-                type="text"
-                placeholder="Search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-              />
-
-
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="placeholder-white"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
                 <button onClick={handleSearch} disabled={loading}>
-                  <i className="ri-search-line"></i>
+                  <i className="ri-search-line text-white"></i>
                 </button>
               </div>
             </div>
+
+
           </div>
         </Container>
       </div>

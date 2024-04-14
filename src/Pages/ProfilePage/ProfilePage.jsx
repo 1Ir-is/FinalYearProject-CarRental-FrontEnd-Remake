@@ -14,6 +14,7 @@ const ProfilePage = () => {
     name: '',
     address: '',
     phone: '',
+    trustPoint: null,
     avatar: null,
   });
   const [uploading, setUploading] = useState(false); // State variable to track image upload status
@@ -30,6 +31,7 @@ const ProfilePage = () => {
           address: userData.address,
           phone: userData.phone,
           avatar: userData.avatar,
+          trustPoint: userData.trustPoint,
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -119,8 +121,8 @@ const ProfilePage = () => {
     <div className="container-xl px-4 mt-5 mb-5">
       <CustomNavLinks />
       <hr className="mt-0 mb-4" />
-      <Row gutter={24}>
-        <Col span={8}>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} md={8} lg={8} xl={8}>
           <div className="card mb-4 mb-xl-0">
             <div className="card-header">Avatar</div>
             <div className="card-body text-center">
@@ -128,47 +130,53 @@ const ProfilePage = () => {
             </div>
           </div>
         </Col>
-        <Col span={16}>
+        <Col xs={24} sm={12} md={16} lg={16} xl={16}>
           <div className="card mb-4">
             <div className="card-header">Personal Information</div>
             <div className="card-body">
               <Form layout="vertical" onFinish={handleSubmit}>
-                <Row gutter={24}>
-                  <Col span={12}>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Name">
                       <Input name="name" placeholder="Enter your name" value={formData.name} onChange={handleInputChange} />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Role">
-                      <p>{getUserRole(currentUser.role)}</p>
-                    </Form.Item>
+                        <div style={{ border: '1px solid #d9d9d9', padding: '4px 4px', borderRadius: '4px', width: 'fit-content' }}>
+                          <p>{getUserRole(currentUser.role)}</p>
+                        </div>
+                      </Form.Item>
                   </Col>
+
                 </Row>
-                <Row gutter={24}>
-                  <Col span={12}>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Phone Number">
                       <Input name="phone" placeholder="Enter your phone number" value={formData.phone} onChange={handleInputChange} />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Address">
                       <Input name="address" placeholder="Enter your address" value={formData.address} onChange={handleInputChange} />
                     </Form.Item>
                   </Col>
                 </Row>
-                <Row gutter={24}>
-                  <Col span={12}>
+                <Row gutter={[16, 16]}>
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Email">
                       <Input value={currentUser.email} readOnly />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24} sm={12}>
                     <Form.Item label="Trust score">
-                      <span>{currentUser.trustPoint}</span>
+                      <div style={{ border: '1px solid #d9d9d9', padding: '8px', borderRadius: '4px', width: 'fit-content' }}>
+                        <span>{formData.trustPoint}</span>
+                      </div>
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col xs={24}>
                     <Form.Item label="Avatar">
                       <Spin spinning={uploading}>
                         <Input type="file" onChange={handleImageUpload} />

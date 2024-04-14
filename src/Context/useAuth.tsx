@@ -74,7 +74,8 @@ export const UserProvider = ({ children }: Props) => {
             address: res?.data.address,
             phone: res?.data.phone,
             role: res?.data.role,
-            avatar: res?.data.avatar // Include the avatar property
+            avatar: res?.data.avatar,
+            trustPoint: res?.data.trustPoint // Include the trustPoint property
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
@@ -98,7 +99,8 @@ export const UserProvider = ({ children }: Props) => {
           address: res?.data.address,
           phone: res?.data.phone,
           role: res?.data.role,
-          avatar: res?.data.avatar // Include the avatar property
+          avatar: res?.data.avatar,
+          trustPoint: res?.data.trustPoint // Include the trustPoint property
         };
         localStorage.setItem("user", JSON.stringify(userObj));
         setToken(res?.data.token!);
@@ -123,7 +125,8 @@ export const UserProvider = ({ children }: Props) => {
           phone: formData.get("phone") as string,
           address: formData.get("address") as string,
           role: user?.role,
-          avatar: user?.avatar // Preserve the avatar property
+          avatar: user?.avatar,
+          trustPoint: user?.trustPoint // Preserve the trustPoint property
         };
 
         setUser(editedUserData);

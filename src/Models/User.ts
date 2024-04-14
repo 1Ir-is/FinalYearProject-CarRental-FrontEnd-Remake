@@ -7,6 +7,7 @@ export type UserProfileToken = {
   token: string;
   role: number; // Add role property
   avatar: string; // Add avatar property
+  trustPoint: number; // Add trustScore property
 };
 
 export interface UserProfile {
@@ -17,4 +18,5 @@ export interface UserProfile {
   address?: string;
   role?: number; // Add role property
   avatar?: string; // Add avatar property
+  trustPoint?: number; // Add trustScore property
 }
