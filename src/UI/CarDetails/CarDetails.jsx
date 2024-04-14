@@ -180,18 +180,18 @@ useEffect(() => {
                   <EnvironmentOutlined style={{ color: "#f9a826", fontSize: "24px" }} />
                   {carDetails.address}
                 </div>
-
                 <div className="section__description text-lg mt-3">
-                  <iframe
-                    title="Google Maps Location"
-                    className="thumbnail-img"
-                    style={{ border: "0" }}
-                    width="450"
-                    height="300"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
-                    allowFullScreen
-                  ></iframe>
+                  <div className="map-container">
+                    <iframe
+                      title="Google Maps Location"
+                      className="thumbnail-img"
+                      style={{ border: "0", width: "100%" }}
+                      height="300"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
+                      allowFullScreen
+                    ></iframe>
+                  </div>
                 </div>
 
 

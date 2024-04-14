@@ -100,10 +100,13 @@ const Navbar = (props) => {
               <div className="header__top__right d-flex align-items-center justify-content-end gap-3">
               {isLoggedIn() ? (
                   <>
+                  <div className="header__top__right">
                     <AccountMenu />
-                    <div className="hover:text-darkBlue">
+                    <div className="welcome-text">
                       Welcome, {user?.name}
                     </div>
+                  </div>
+
                   </>
                 ) : (
                   <>
@@ -191,9 +194,46 @@ const Navbar = (props) => {
       <div className="main__navbar">
         <Container>
           <div className="navigation__wrapper d-flex align-items-center justify-content-between">
-            <span className="mobile__menu">
-              <i className="ri-menu-line" onClick={toggleMenu}></i>
-            </span>
+
+
+          <span className="mobile__menu flex items-center justify-between"> {/* Changed justify-end to justify-between */}
+            <div className="flex items-center mr-44"> {/* Added mr-8 for more margin-right */}
+              <i className="ri-menu-line" onClick={toggleMenu}></i> 
+              {isLoggedIn() && (
+                <div className="header__top__right" style={{ paddingRight: '0', '@media (max-width: 768px)': { paddingRight: '0' } }}> {/* Overriding padding-right */}
+                  <AccountMenu />
+                  <div className="welcome-text">
+                    Welcome, {user?.name}
+                  </div>
+                </div>
+              )}
+
+
+            </div>
+            {!isLoggedIn() && ( 
+                <div className="flex items-center">
+                <Link
+                  to="/login"
+                  className="flex items-center gap-1 md:hidden no-underline text-white mr-4" // Added gap-1 class for consistency
+                >
+                  <i className="ri-login-circle-line text-white"></i> {/* Updated mr-2 for margin-right */}
+                  Login 
+                </Link>
+                <Link
+                  to="/register"
+                  className="flex items-center gap-1 md:hidden no-underline text-white" // Added gap-1 class for consistency
+                >
+                  <i className="ri-user-line text-white"></i> {/* Removed mr-1 */}
+                  Register 
+                </Link>
+              </div>
+            )}
+          </span>
+
+
+
+
+
 
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>
               <div className="menu">
