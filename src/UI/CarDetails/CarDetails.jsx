@@ -182,16 +182,19 @@ useEffect(() => {
                 </div>
 
                 <div className="section__description text-lg mt-3">
-                              <iframe
-                className="thumbnail-img"
-                frameBorder="0"
-                style={{ border: "0" }}
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
-                allowFullScreen
-              ></iframe>
-
+                  <iframe
+                    title="Google Maps Location"
+                    className="thumbnail-img"
+                    style={{ border: "0" }}
+                    width="450"
+                    height="300"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDWTx7bREpM5B6JKdbzOvMW-RRlhkukmVE&q=place_id:${carDetails.placeId}`}
+                    allowFullScreen
+                  ></iframe>
                 </div>
+
+
               </div>
             </Col>
 
@@ -204,7 +207,7 @@ useEffect(() => {
 
             <Col lg="5" className="mt-5">
               <div className="payment__info mt-5">
-                <h5 className="mb-4 fw-bold ">Payment Information</h5>
+                <h5 className="mb-4 fw-bold ">Information To Rent</h5>
                 <PaymentMethod />
               </div>
             </Col>
