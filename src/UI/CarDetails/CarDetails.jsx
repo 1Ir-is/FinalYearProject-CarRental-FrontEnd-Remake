@@ -26,6 +26,8 @@ const CarDetails = () => {
   const userName = user?.name;
   const [userAvatar, setUserAvatar] = useState(null)
 
+ 
+
 
 useEffect(() => {
     // Fetch user's avatar from backend API
@@ -101,6 +103,33 @@ useEffect(() => {
   
     } catch (error) {
       console.error("Error submitting review:", error);
+    }
+  };
+
+  const handleBookingSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    const formData = new FormData(event.target); // Get form data
+
+    // Convert formData to JSON
+    const bookingData = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      note: formData.get("note"),
+      startDate: formData.get("startDate"),
+      endDate: formData.get("endDate"),
+      postVehicleId: carDetails.id,
+      totalPrice: carDetails.price,
+    };
+
+    try {
+      const response = await axios.post(
+        `https://localhost:7228/api/Home/rent-vehicle/${userId}`, // Pass user ID to API endpoint
+        bookingData
+      );
+      console.log(response.data); // Log success message
+    } catch (error) {
+      console.error("Error renting vehicle:", error.response.data); // Log error message
     }
   };
   
@@ -201,7 +230,7 @@ useEffect(() => {
             <Col lg="7" className="mt-5">
               <div className="booking-info mt-5">
                 <h5 className="mb-4 fw-bold ">Booking Information</h5>
-                <BookingForm />
+                <BookingForm submitHandler={handleBookingSubmit} />
               </div>
             </Col>
 

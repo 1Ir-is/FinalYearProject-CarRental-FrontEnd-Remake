@@ -9,8 +9,8 @@ const BookingForm = ({ submitHandler }) => {
         <input type="text" placeholder="Name" name="name" id="name" required />
       </FormGroup>
       <FormGroup className="booking__form d-inline-block ms-1 mb-4">
-        <Label for="phoneNumber">Phone Number</Label>
-        <input type="tel" placeholder="Phone Number" name="phoneNumber" id="phoneNumber" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required />
+        <Label for="phone">Phone Number</Label>
+        <input type="tel" placeholder="Phone Number" name="phone" id="phone" required />
       </FormGroup>
 
       <FormGroup className="booking__form d-inline-block me-4 mb-4">

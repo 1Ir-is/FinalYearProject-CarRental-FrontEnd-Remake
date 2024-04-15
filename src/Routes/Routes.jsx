@@ -24,6 +24,7 @@ import RenterList from "../Pages/RenterList/RenterList";
 import FavoriteList from "../Pages/FavoriteListPage/FavoriteList";
 
 import { Navigate } from "react-router-dom";
+import RentalDetail from "../Pages/RenterList/RentalDetail";
 
 export const router = createBrowserRouter([
   {
@@ -48,17 +49,20 @@ export const router = createBrowserRouter([
       { path: "followed-cars/:userId", element: <FavoriteList /> },
       { path: "rented-car", element: <RentedCarView /> },
       
+      
       // Protected route for owner registration
       { path: "register-owner", element: <OwnerPage />},
 
       // For owner - Protected routes
-      { path: "vehicle-post", element: <OwnerProtectedRoute><VehiclePost /></OwnerProtectedRoute> },
-      { path: "create-post", element: <OwnerProtectedRoute><CreatePostPage /></OwnerProtectedRoute> },
-      { path: "edit-post/:postId", element: <OwnerProtectedRoute><EditPost /></OwnerProtectedRoute> },
+      { path: "vehicle-post", element: <VehiclePost /> },
+      { path: "create-post", element: <CreatePostPage /> },
+      { path: "edit-post/:postId", element: <EditPost /> },
+      { path: "rental-detail/:rentalId", element: <RentalDetail /> },
+      
      
-      // 403 route
-      { path: "access-denied", element: <ForbiddenPage /> },
-      { path: "*", element: <Navigate to="/access-denied" replace /> },
+      // // 403 route
+      // { path: "access-denied", element: <ForbiddenPage /> },
+      // { path: "*", element: <Navigate to="/access-denied" replace /> },
     ],
   },
 ]);

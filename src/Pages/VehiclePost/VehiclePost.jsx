@@ -100,9 +100,10 @@ const VehiclePost = () => {
   };
 
   const handleViewList = (record) => {
-    // Navigate to the RenterList component with the vehicleId as a URL parameter
-    navigate(`/create-post/renter-list/${record.id}`);
+    // Navigate to the RentalDetail component with the postId as a URL parameter
+    navigate(`/rental-detail/${record.id}`);
   };
+  
 
   const columns = [
     {
