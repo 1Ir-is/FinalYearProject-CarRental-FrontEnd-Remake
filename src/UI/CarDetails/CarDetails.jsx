@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Divider, Input, Form, Button, Avatar, InputNumber, Radio } from "antd";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../../Components/Helmet/Helmet";
+import { message } from "antd";
 import BookingForm from "../BookingForm/BookingForm";
 import PaymentMethod from "../PaymentMethod/PaymentMethod";
 import { TeamOutlined, EnvironmentOutlined } from '@ant-design/icons';
@@ -25,6 +26,7 @@ const CarDetails = () => {
   const userId = user?.userId;
   const userName = user?.name;
   const [userAvatar, setUserAvatar] = useState(null)
+  const navigate = useNavigate();
 
  
 
@@ -128,6 +130,8 @@ useEffect(() => {
         bookingData
       );
       console.log(response.data); // Log success message
+      message.success("Vehicle rented successfully!"); // Show success message
+      navigate("/rented-car"); // Redirect to rental list page
     } catch (error) {
       console.error("Error renting vehicle:", error.response.data); // Log error message
     }
@@ -166,7 +170,7 @@ useEffect(() => {
                     ${carDetails.price}.00 / Day
                   </h6>
 
-                  <span className=" d-flex align-items-center gap-2">
+                  <span className="d-flex align-items-center gap-2">
                     <span style={{ color: "#f9a826" }}>
                       <i className="ri-star-s-fill"></i>
                       <i className="ri-star-s-fill"></i>
@@ -174,8 +178,9 @@ useEffect(() => {
                       <i className="ri-star-s-fill"></i>
                       <i className="ri-star-s-fill"></i>
                     </span>
-                    ({carDetails.rating} ratings)
+                    ({carDetails.rating.toFixed(1)} ratings) {/* Display rating with one decimal place */}
                   </span>
+
                 </div>
 
                 <p className="text-2xl font-bold mb-2">{carDetails.title}</p>

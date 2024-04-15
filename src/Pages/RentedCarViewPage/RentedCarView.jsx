@@ -2,58 +2,51 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Spin } from 'antd';
 import { Link } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
+import axios from 'axios'; // Import axios for making HTTP requests
+import { useAuth } from '../../Context/useAuth';
 
 const RentedCarView = () => {
-  // Sample data for demonstration, replace with actual data fetched from API
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const userId = user?.userId;
 
+  console.log(data);
   useEffect(() => {
-    // Simulate API call for demonstration purpose
-    setTimeout(() => {
-      setData([
-        {
-          id: 1,
-          vehicleName: 'Vehicle 1',
-          customerName: 'John Doe',
-          phone: '123-456-7890',
-          email: 'john@example.com',
-          price: 100,
-          pickUpDate: '2024-04-10',
-          returnDate: '2024-04-15',
-          bookingDate: '2024-04-05',
-        },
-        {
-          id: 2,
-          vehicleName: 'Vehicle 2',
-          customerName: 'Jane Doe',
-          phone: '987-654-3210',
-          email: 'jane@example.com',
-          price: 200,
-          pickUpDate: '2024-04-12',
-          returnDate: '2024-04-17',
-          bookingDate: '2024-04-07',
-        },
-      ]);
-      setLoading(false);
-    }, 1500); // Simulated delay
-  }, []);
+    // Fetch rented vehicles data from the API
+    const fetchRentedVehicles = async () => {
+      try {
+        const response = await axios.get(`https://localhost:7228/api/Home/get-all-rented-vehicles/${userId}`); // Include userId in the URL
+        setData(response.data); // Set the fetched data to the state
+        setLoading(false); // Update loading state
+      } catch (error) {
+        console.error('Error fetching rented vehicles:', error);
+        setLoading(false); // Update loading state even if an error occurs
+      }
+    };
+
+    if (userId) {
+      fetchRentedVehicles(); // Call the fetchRentedVehicles function when component mounts and userId is available
+    }
+  }, [userId]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString(); // Format date portion
+    const time = date.toLocaleTimeString(); // Get time portion
+    return `${formattedDate}  ~  ${time}`;
+  };
 
   const columns = [
-    {
-      title: 'Id',
-      dataIndex: 'id',
-      key: 'id',
-    },
     {
       title: 'Vehicle Name',
       dataIndex: 'vehicleName',
       key: 'vehicleName',
     },
     {
-      title: 'Customer Name',
-      dataIndex: 'customerName',
-      key: 'customerName',
+      title: 'Renter Name',
+      dataIndex: 'userName', 
+      key: 'userName', 
     },
     {
       title: 'Phone',
@@ -72,18 +65,21 @@ const RentedCarView = () => {
     },
     {
       title: 'Pick-up Date',
-      dataIndex: 'pickUpDate',
-      key: 'pickUpDate',
+      dataIndex: 'startDate',
+      key: 'startDate',
+      render: (startDate) => formatDate(startDate), // Format pick-up date
     },
     {
       title: 'Return Date',
-      dataIndex: 'returnDate',
-      key: 'returnDate',
+      dataIndex: 'endDate',
+      key: 'endDate',
+      render: (endDate) => formatDate(endDate), // Format return date
     },
     {
       title: 'Booking Date',
-      dataIndex: 'bookingDate',
-      key: 'bookingDate',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (createdAt) => formatDate(createdAt), // Format booking date
     },
     {
       title: 'Action',
@@ -92,25 +88,24 @@ const RentedCarView = () => {
         <Button type="link" onClick={() => handleViewDetails(record)} className="text-blue-500 hover:text-blue-700 focus:outline-none">
           View Details
         </Button>
-
       ),
     },
   ];
 
   const handleViewDetails = (record) => {
-    // Show vehicle details modal or navigate to details page
     Modal.info({
-      title: `${record.vehicleName} Details`,
+      title: `Rental Details`,
       content: (
         <div>
           <p>Vehicle Name: {record.vehicleName}</p>
-          <p>Customer Name: {record.customerName}</p>
+          <p>Renter Name: {record.userName}</p>
           <p>Phone: {record.phone}</p>
           <p>Email: {record.email}</p>
           <p>Price: {record.price}</p>
-          <p>Pick-up Date: {record.pickUpDate}</p>
-          <p>Return Date: {record.returnDate}</p>
-          <p>Booking Date: {record.bookingDate}</p>
+          <p>Pick-up Date: {formatDate(record.startDate)}</p>
+          <p>Return Date: {formatDate(record.endDate)}</p>
+          <p>Booking Date: {formatDate(record.createdAt)}</p>
+
         </div>
       ),
       onOk() {},

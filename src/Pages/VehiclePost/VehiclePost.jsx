@@ -108,8 +108,11 @@ const VehiclePost = () => {
   const columns = [
     {
       title: 'No. of Renters',
-      dataIndex: 'renters',
+      dataIndex: 'userRentCars',
       key: 'renters',
+      render: (userRentCars) => (
+        <span>{userRentCars.length}</span>
+      ),
     },
     {
       title: 'Image',
@@ -151,7 +154,11 @@ const VehiclePost = () => {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
+      render: (rating) => (
+        <span>{rating.toFixed(1)}</span> // Display rating with one decimal place
+      ),
     },
+    
     {
       title: 'Status',
       dataIndex: 'status',

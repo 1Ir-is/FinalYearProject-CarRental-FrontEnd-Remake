@@ -172,7 +172,7 @@ const ProfilePage = () => {
                   <Col xs={24} sm={12}>
                     <Form.Item label="Trust score">
                       <div style={{ border: '1px solid #d9d9d9', padding: '8px', borderRadius: '4px', width: 'fit-content' }}>
-                        <span>{formData.trustPoint}</span>
+                        <span>{formData.trustPoint !== null ? formData.trustPoint.toFixed(1) : 'N/A'}</span>
                       </div>
                     </Form.Item>
                   </Col>
