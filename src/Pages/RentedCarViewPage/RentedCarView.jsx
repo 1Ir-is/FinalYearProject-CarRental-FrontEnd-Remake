@@ -44,9 +44,9 @@ const RentedCarView = () => {
       key: 'vehicleName',
     },
     {
-      title: 'Renter Name',
-      dataIndex: 'userName', 
-      key: 'userName', 
+      title: 'Renter Name', // Add a new column for Name
+      dataIndex: 'name', // Assuming the data key for name is 'name'
+      key: 'name',
     },
     {
       title: 'Phone',
@@ -91,6 +91,7 @@ const RentedCarView = () => {
       ),
     },
   ];
+  
 
   const handleViewDetails = (record) => {
     Modal.info({
@@ -98,21 +99,20 @@ const RentedCarView = () => {
       content: (
         <div>
           <p>Vehicle Name: {record.vehicleName}</p>
-          <p>Renter Name: {record.userName}</p>
+          <p>Renter Name: {record.name}</p> {/* Include the name field */}
           <p>Phone: {record.phone}</p>
           <p>Email: {record.email}</p>
           <p>Price: {record.price}</p>
           <p>Pick-up Date: {formatDate(record.startDate)}</p>
           <p>Return Date: {formatDate(record.endDate)}</p>
           <p>Booking Date: {formatDate(record.createdAt)}</p>
-
         </div>
       ),
       onOk() {},
-      okButtonProps: { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" },
+      okButtonProps: { className: "bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded focus:outline-none focus:shadow-outline" },
     });
   };
-
+  
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Form, FormGroup, Label, Button } from 'reactstrap';
 
-const BookingForm = ({ submitHandler }) => {
+const BookingForm = ({ name, submitHandler }) => {
   return (
     <Form onSubmit={submitHandler}>
       <FormGroup className="booking__form d-inline-block me-4 mb-4">
         <Label for="name">Name</Label>
-        <input type="text" placeholder="Name" name="name" id="name" required />
+        <input type="text" placeholder="Name" name="name" id="name" value={name} readOnly />
       </FormGroup>
       <FormGroup className="booking__form d-inline-block ms-1 mb-4">
         <Label for="phone">Phone Number</Label>

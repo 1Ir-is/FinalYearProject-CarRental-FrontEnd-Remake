@@ -108,31 +108,32 @@ useEffect(() => {
     }
   };
 
-  const handleBookingSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-    const formData = new FormData(event.target); // Get form data
-
-    // Convert formData to JSON
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    setLoading(true); // Set loading state to true when form is submitted
+  
+    // Convert form data to JSON
+    const formData = new FormData(event.target);
     const bookingData = {
-      name: formData.get("name"),
+      name: formData.get("name"), // Include name in the data
       phone: formData.get("phone"),
       email: formData.get("email"),
       note: formData.get("note"),
       startDate: formData.get("startDate"),
       endDate: formData.get("endDate"),
-      postVehicleId: carDetails.id,
-      totalPrice: carDetails.price,
     };
-
+  
     try {
       const response = await axios.post(
         `https://localhost:7228/api/Home/rent-vehicle/${userId}`, // Pass user ID to API endpoint
         bookingData
       );
+      setLoading(false); // Set loading state to false after submission
       console.log(response.data); // Log success message
       message.success("Vehicle rented successfully!"); // Show success message
       navigate("/rented-car"); // Redirect to rental list page
     } catch (error) {
+      setLoading(false); // Set loading state to false on error
       console.error("Error renting vehicle:", error.response.data); // Log error message
     }
   };
@@ -235,7 +236,8 @@ useEffect(() => {
             <Col lg="7" className="mt-5">
               <div className="booking-info mt-5">
                 <h5 className="mb-4 fw-bold ">Booking Information</h5>
-                <BookingForm submitHandler={handleBookingSubmit} />
+                <BookingForm name={userName} submitHandler={handleSubmit} />
+
               </div>
             </Col>
 
