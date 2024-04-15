@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Spin, message, Button } from "antd";
+import { Table, Spin, message } from "antd";
 import axios from "axios";
 import { useAuth } from "../../Context/useAuth";
 import CustomNavLinks from "../../Components/CustomNavlink/CustomNavlink";
@@ -94,7 +94,7 @@ const FavoriteList = () => {
   }, [userId]);
 
   return (
-    <>
+
       <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />
       <hr className="mt-0 mb-4"/>
@@ -129,7 +129,7 @@ const FavoriteList = () => {
         </div>
       </div>
     </div>
-    </>
+
     
   );
 };
