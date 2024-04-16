@@ -3,11 +3,12 @@ import { Outlet, useLocation } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
-import { UserProvider } from "./Context/useAuth";
+import { UserProvider, useAuth } from "./Context/useAuth";
 import TalkJs from './Components/ChatBox/TalkJs'; // Import TalkJs here
 import { Button, Modal } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { GoogleOAuthProvider } from "@react-oauth/google";
+
 
 // Define a function to check if the current location is ForbiddenPage
 import { Location } from 'history';
