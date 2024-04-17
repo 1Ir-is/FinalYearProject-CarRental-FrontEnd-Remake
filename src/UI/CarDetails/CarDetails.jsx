@@ -114,6 +114,16 @@ useEffect(() => {
   
     // Convert form data to JSON
     const formData = new FormData(event.target);
+    const startDate = new Date(formData.get("startDate"));
+    const endDate = new Date(formData.get("endDate"));
+    const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+    // Calculate total price
+    const totalPrice = carDetails.price * days;
+
+      // Set totalPrice in localStorage
+  localStorage.setItem("totalPrice", totalPrice);
+
     const newBookingData = {
       name: formData.get("name"),
       phone: formData.get("phone"),
@@ -122,7 +132,7 @@ useEffect(() => {
       startDate: formData.get("startDate"),
       endDate: formData.get("endDate"),
       postVehicleId: carDetails.id,
-      totalPrice: carDetails.price,
+      totalPrice: totalPrice,
     };
   
     // Set bookingData state
@@ -333,7 +343,7 @@ useEffect(() => {
                       return actions.order.create({
                         purchase_units: [{
                           amount: {
-                            value: carDetails.price,
+                            value: localStorage.getItem("totalPrice"),
                           },
                         }],
                       });

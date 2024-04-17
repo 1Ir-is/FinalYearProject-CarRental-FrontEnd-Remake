@@ -59,9 +59,16 @@ const RentedCarView = () => {
       key: 'email',
     },
     {
-      title: 'Price',
+      title: 'Price/Day',
       dataIndex: 'price',
       key: 'price',
+      render: (price) => `$${price}`, // Render price with dollar sign
+    },
+    {
+      title: 'Total Price',
+      dataIndex: 'totalPrice',
+      key: 'totalPrice',
+      render: (totalPrice) => `$${totalPrice}`, // Render totalPrice with dollar sign
     },
     {
       title: 'Pick-up Date',

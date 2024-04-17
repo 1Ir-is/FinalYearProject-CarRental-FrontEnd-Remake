@@ -48,9 +48,9 @@ const RenterList = () => {
             key: 'email',
         },
         {
-            title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
+            title: 'Total Price',
+            dataIndex: 'totalPrice',
+            key: 'totalPrice',
         },
         {
             title: 'Received Date',
