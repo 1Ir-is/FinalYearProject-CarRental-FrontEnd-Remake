@@ -111,7 +111,7 @@ const LoginPage = (props: Props) => {
                 )}
               </div>
               <div className="mb-3">
-                <Link to="#" className="forgot-password-link">Forgot password?</Link>
+              <Link to="/forgot-password" className="forgot-password-link">Forgot password?</Link>
               </div>
               <button type="submit" className="btn btn-primary w-100">Sign in</button>
             </form>

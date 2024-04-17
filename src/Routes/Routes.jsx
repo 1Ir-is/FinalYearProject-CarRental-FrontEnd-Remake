@@ -13,15 +13,15 @@ import Contact from "../Pages/ContactPage/ContactPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
 import OwnerPage from "../Pages/OwnerPage/OwnerPage";
 import RentedCarView from "../Pages/RentedCarViewPage/RentedCarView";
-import FavoriteVehicleList from "../Pages/FavoriteListPage/FavoriteList";
 import VehiclePost from "../Pages/VehiclePost/VehiclePost";
 import CreatePostPage from "../Pages/CreatePost/CreatePost";
 import EditPost from "../Pages/EditPost/EditPost";
 import ChangePasswordPage from "../Pages/ChangePassword/ChangePassword";
 import { OwnerProtectedRoute } from "./ProtectedRoute";
 import ForbiddenPage from "../Pages/ForbiddenPage/ForbiddenPage";
-import RenterList from "../Pages/RenterList/RenterList";
 import FavoriteList from "../Pages/FavoriteListPage/FavoriteList";
+import ForgotPasswordPage from "../Pages/ForgotPassword/ForgotPasswordPage"
+
 
 import { Navigate } from "react-router-dom";
 import RentalDetail from "../Pages/RenterList/RentalDetail";
@@ -37,6 +37,7 @@ export const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
       { path: "change-password", element: <ChangePasswordPage /> }, 
+      { path: "forgot-password", element: <ForgotPasswordPage /> },
 
       // For user
       { path: "about", element: <AboutPage /> },
