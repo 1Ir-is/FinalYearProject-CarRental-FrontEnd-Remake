@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button, Form, Input, InputNumber, Select, Modal, message, Spin, Progress } from 'antd';
+import { useState } from 'react';
+import { Button, Form, Input, Select, Modal, message, Spin } from 'antd';
 import axios from 'axios';
-import { useAuth } from '../../Context/useAuth'; // Update the path as per your file structure
+import { useAuth } from '../../Context/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -29,6 +29,7 @@ const CreatePost = () => {
         values.Image = imageUrl;
       }
       const response = await axios.post(`https://localhost:7228/api/Owner/create-post/${userId}`, values);
+      console.log('Post created:', response.data);
       message.success('Post created successfully!');
       setIsModalVisible(false);
       setLoading(false);

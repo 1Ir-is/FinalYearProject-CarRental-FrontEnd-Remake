@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Select, message, Spin, Modal, LoadingOutlined } from 'antd';
+import { useState, useEffect } from 'react';
+import { Button, Form, Input, InputNumber, Select, message, Spin, Modal } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration'; 

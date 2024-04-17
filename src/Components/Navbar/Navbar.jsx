@@ -1,8 +1,7 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Modal } from "antd";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import avatar from "./avatar-1.png";
 import { useAuth } from "../../Context/useAuth";
 import AccountMenu from "../AccountMenu/AccountMenu";
 import axios from "axios";
@@ -39,7 +38,6 @@ const Navbar = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const navigate = useNavigate();
-  const [modalVisible, setModalVisible] = useState(false);
   
 
   const menuRef = useRef(null);
@@ -73,10 +71,8 @@ const Navbar = (props) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       if (searchQuery.trim() === "") {
-        // If search query is empty, navigate to "/cars" directly
         navigate("/cars");
       } else {
-        // Otherwise, perform search
         handleSearch();
       }
     }
@@ -196,11 +192,11 @@ const Navbar = (props) => {
           <div className="navigation__wrapper d-flex align-items-center justify-content-between">
 
 
-          <span className="mobile__menu flex items-center justify-between"> {/* Changed justify-end to justify-between */}
-            <div className="flex items-center mr-44"> {/* Added mr-8 for more margin-right */}
+          <span className="mobile__menu flex items-center justify-between"> 
+            <div className="flex items-center mr-44"> 
               <i className="ri-menu-line" onClick={toggleMenu}></i> 
               {isLoggedIn() && (
-                <div className="header__top__right" style={{ paddingRight: '0', '@media (max-width: 768px)': { paddingRight: '0' } }}> {/* Overriding padding-right */}
+                <div className="header__top__right" style={{ paddingRight: '0', '@media (max-width: 768px)': { paddingRight: '0' } }}> 
                   <AccountMenu />
                   <div className="welcome-text">
                     Welcome, {user?.name}
@@ -214,16 +210,16 @@ const Navbar = (props) => {
                 <div className="flex items-center">
                 <Link
                   to="/login"
-                  className="flex items-center gap-1 md:hidden no-underline text-white mr-4" // Added gap-1 class for consistency
+                  className="flex items-center gap-1 md:hidden no-underline text-white mr-4" 
                 >
-                  <i className="ri-login-circle-line text-white"></i> {/* Updated mr-2 for margin-right */}
+                  <i className="ri-login-circle-line text-white"></i> 
                   Login 
                 </Link>
                 <Link
                   to="/register"
-                  className="flex items-center gap-1 md:hidden no-underline text-white" // Added gap-1 class for consistency
+                  className="flex items-center gap-1 md:hidden no-underline text-white" 
                 >
-                  <i className="ri-user-line text-white"></i> {/* Removed mr-1 */}
+                  <i className="ri-user-line text-white"></i> 
                   Register 
                 </Link>
               </div>

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Spin } from 'antd';
-import { Link } from 'react-router-dom';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
 import axios from 'axios'; // Import axios for making HTTP requests
 import { useAuth } from '../../Context/useAuth';
@@ -45,8 +44,8 @@ const RentedCarView = () => {
     },
     {
       title: 'Renter Name', // Add a new column for Name
-      dataIndex: 'name', // Assuming the data key for name is 'name'
-      key: 'name',
+      dataIndex: 'userName', // Assuming the data key for name is 'name'
+      key: 'userName',
     },
     {
       title: 'Phone',
@@ -89,6 +88,11 @@ const RentedCarView = () => {
       render: (createdAt) => formatDate(createdAt), // Format booking date
     },
     {
+      title: 'Note',
+      dataIndex: 'note',
+      key: 'note',
+    },
+    {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
@@ -97,6 +101,7 @@ const RentedCarView = () => {
         </Button>
       ),
     },
+  
   ];
   
 
@@ -106,11 +111,12 @@ const RentedCarView = () => {
       content: (
         <div>
           <p>Vehicle Name: {record.vehicleName}</p>
-          <p>Renter Name: {record.name}</p> {/* Include the name field */}
+          <p>Renter Name: {record.userName}</p> {/* Include the name field */}
           <p>Phone: {record.phone}</p>
           <p>Email: {record.email}</p>
           <p>Price/Day: {record.price}</p>
           <p>Total Price: {record.totalPrice}</p>
+          <p>Note: {record.note}</p>
           <p>Pick-up Date: {formatDate(record.startDate)}</p>
           <p>Return Date: {formatDate(record.endDate)}</p>
           <p>Booking Date: {formatDate(record.createdAt)}</p>

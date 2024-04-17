@@ -48,6 +48,11 @@ const RentalDetail = () => {
       key: 'vehicleName',
     },
     {
+      title: 'Note',
+      dataIndex: 'note',
+      key: 'note',
+    },
+    {
       title: 'Start Date',
       dataIndex: 'startDate',
       key: 'startDate',
@@ -89,6 +94,7 @@ const RentalDetail = () => {
                     name: rental.name,
                     email: rental.email,
                     vehicleName: rental.vehicleName,
+                    note: rental.note,
                     startDate: rental.startDate,
                     endDate: rental.endDate,
                     totalPrice: rental.totalPrice,

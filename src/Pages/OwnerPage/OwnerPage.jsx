@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import carImage from '../../assets/all-images/pexels-may-dayua-1545743.jpg';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../Context/useAuth'; // Import the useAuth hook
+import { useAuth } from '../../Context/useAuth'; 
 import Swal from 'sweetalert2';
-import { Modal, Button, message } from 'antd'; // Import Modal and message components from Ant Design
+import { Modal, Button } from 'antd'; 
 
 const OwnerPage = () => {
     const { user } = useAuth();
@@ -56,6 +56,7 @@ const OwnerPage = () => {
         try {
             const userId = user ? user.userId : null;
             const response = await axios.post(`https://localhost:7228/api/User/create-approval-application/${userId}`, formData);
+            console.log('Response:', response.data);
             sessionStorage.setItem('isApproving', true); // Store in sessionStorage
             setModalVisible(true); // Show success modal
             // Fetch the updated request status

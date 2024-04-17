@@ -1,9 +1,8 @@
-import React, { useState } from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate,  } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -40,10 +39,6 @@ const LoginPage = (props: Props) => {
   const handleLogin = (form: LoginFormsInputs) => {
     loginUser(form.Email, form.password);
   };
-  
-  const navigate = useNavigate();
-
-  
 
 
   const handleGoogleLoginSuccess = async (credentialResponse: any) => {

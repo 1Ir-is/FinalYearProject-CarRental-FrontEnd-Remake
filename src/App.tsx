@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
-import { UserProvider, useAuth } from "./Context/useAuth";
+import { UserProvider } from "./Context/useAuth";
 import TalkJs from './Components/ChatBox/TalkJs'; // Import TalkJs here
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 

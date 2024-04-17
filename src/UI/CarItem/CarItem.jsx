@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Col, Button } from "reactstrap";
+import { useState, useEffect } from "react";
+import { Col } from "reactstrap";
 import { message as antMessage } from "antd";
 import { Link } from "react-router-dom";
 import { TeamOutlined } from '@ant-design/icons';
@@ -9,7 +9,7 @@ import { useAuth } from "../../Context/useAuth";
 import "./CarItem.css";
 
 const CarItem = ({ item }) => {
-  const { id, image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price, status } = item;
+  const { id, image, vehicleYear, vehicleName, vehicleType, vehicleSeat, price } = item;
   const { user } = useAuth();
   const userId = user?.userId;
   const [isFollowing, setIsFollowing] = useState(false);

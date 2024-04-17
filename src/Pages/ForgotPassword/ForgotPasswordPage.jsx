@@ -11,23 +11,24 @@ const ForgotPasswordPage = () => {
 
   const onFinish = async (values) => {
     const { email } = values;
-    setIsModalVisible(true); // Show confirmation modal
+    setIsModalVisible(true);
     try {
-      setLoading(true); // Start loading spinner
+      setLoading(true); 
       const response = await axios.post(
         'https://localhost:7228/api/Auth/forgot-password',
-        `"${email}"`, // Wrap email in double quotes to ensure it's sent as a string
+        `"${email}"`, 
         {
             headers: {
-                'Content-Type': 'application/json', // Specify content type as JSON
+                'Content-Type': 'application/json',
             },
         }
     );
-      setLoading(false); // Stop loading spinner
-      setShowSuccessMessage(true); // Show success message
+      console.log('Response:', response.data);
+      setLoading(false);
+      setShowSuccessMessage(true); 
     } catch (error) {
-      setLoading(false); // Stop loading spinner
-      setShowSuccessMessage(false); // Hide success message
+      setLoading(false); 
+      setShowSuccessMessage(false); 
       console.error('An error occurred:', error);
     }
   };

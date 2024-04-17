@@ -1,4 +1,4 @@
-import { createBrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import HomePage from "../Pages/HomePage/HomePage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
@@ -20,7 +20,8 @@ import ChangePasswordPage from "../Pages/ChangePassword/ChangePassword";
 import { OwnerProtectedRoute } from "./ProtectedRoute";
 import ForbiddenPage from "../Pages/ForbiddenPage/ForbiddenPage";
 import FavoriteList from "../Pages/FavoriteListPage/FavoriteList";
-import ForgotPasswordPage from "../Pages/ForgotPassword/ForgotPasswordPage"
+import ForgotPasswordPage from "../Pages/ForgotPassword/ForgotPasswordPage";
+import ResetPasswordPage from "../Pages/ResetPassword/ResetPasswordPage";
 
 
 import { Navigate } from "react-router-dom";
@@ -38,6 +39,7 @@ export const router = createBrowserRouter([
       { path: "register", element: <RegisterPage /> },
       { path: "change-password", element: <ChangePasswordPage /> }, 
       { path: "forgot-password", element: <ForgotPasswordPage /> },
+      { path: "reset-password/:email/:resetKey", element: <ResetPasswordPage /> },
 
       // For user
       { path: "about", element: <AboutPage /> },
@@ -61,9 +63,9 @@ export const router = createBrowserRouter([
       { path: "rental-detail/:rentalId", element: <RentalDetail /> },
       
      
-      // // 403 route
-      // { path: "access-denied", element: <ForbiddenPage /> },
-      // { path: "*", element: <Navigate to="/access-denied" replace /> },
+      // 403 route
+      { path: "access-denied", element: <ForbiddenPage /> },
+      { path: "*", element: <Navigate to="/access-denied" replace /> },
     ],
   },
 ]);

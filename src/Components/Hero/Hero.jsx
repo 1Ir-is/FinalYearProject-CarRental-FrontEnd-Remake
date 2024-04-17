@@ -1,16 +1,13 @@
-import React, { useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../Helmet/Helmet";
 import HeroSlider from "../../UI/HeroSlider/HeroSlider";
 import FindCarForm from "../../UI/FindCarForm/FindCarForm";
 import AboutSection from "../../UI/AboutSection/AboutSection";
-import CarItem from "../../UI/CarItem/CarItem";
 import ServicesList from "../../UI/ServiceList/ServiceList";
 import BecomeDriverSection from "../../UI/BecomeDriverSection/BecomeDriveSection";
 import Testimonial from "../../UI/Testimonial/Testimonial";
 import BlogList from "../../UI/BlogList/BlogList";
 
-import carData from "../../assets/data/carData";
 import "./Hero.css";
 
 const Hero = () => {
