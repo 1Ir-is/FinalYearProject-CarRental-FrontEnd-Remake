@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Divider, Input, Form, Button, Avatar, InputNumber, Radio } from "antd";
+import { Divider, Input, Form, Button, Avatar, InputNumber, Radio, Modal } from "antd";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../../Components/Helmet/Helmet";
 import { message } from "antd";
@@ -10,6 +10,7 @@ import PaymentMethod from "../PaymentMethod/PaymentMethod";
 import { TeamOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import { useAuth } from "../../Context/useAuth";
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const { TextArea } = Input;
 
@@ -27,8 +28,8 @@ const CarDetails = () => {
   const userName = user?.name;
   const [userAvatar, setUserAvatar] = useState(null)
   const navigate = useNavigate();
-
- 
+  const [showPaypalModal, setShowPaypalModal] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
 
 
 useEffect(() => {
@@ -110,23 +111,37 @@ useEffect(() => {
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission
-    setLoading(true); // Set loading state to true when form is submitted
   
     // Convert form data to JSON
     const formData = new FormData(event.target);
-    const bookingData = {
-      name: formData.get("name"), // Include name in the data
+    const newBookingData = {
+      name: formData.get("name"),
       phone: formData.get("phone"),
       email: formData.get("email"),
       note: formData.get("note"),
       startDate: formData.get("startDate"),
       endDate: formData.get("endDate"),
+      postVehicleId: carDetails.id,
+      totalPrice: carDetails.price,
     };
   
+    // Set bookingData state
+    setBookingData(newBookingData);
+  
+    // Open PayPal modal
+    setShowPaypalModal(true);
+  };
+
+  
+  const handlePaypalSuccess = async (details, data) => {
+    console.log("PayPal payment successful!");
+    setShowPaypalModal(false);
+
     try {
+      // Call API order after PayPal payment success
       const response = await axios.post(
         `https://localhost:7228/api/Home/rent-vehicle/${userId}`, // Pass user ID to API endpoint
-        bookingData
+        bookingData // Use bookingData from state
       );
       setLoading(false); // Set loading state to false after submission
       console.log(response.data); // Log success message
@@ -134,10 +149,17 @@ useEffect(() => {
       navigate("/rented-car"); // Redirect to rental list page
     } catch (error) {
       setLoading(false); // Set loading state to false on error
-      console.error("Error renting vehicle:", error.response.data); // Log error message
+      console.error("Error submitting order:", error); // Log error message
+      message.error("Error submitting order. Please try again."); // Show error message
     }
   };
-  
+
+    const handlePaypalCancel = () => {
+      setShowPaypalModal(false);
+      message.error("Payment cancelled!");
+      console.log("PayPal payment cancelled!");
+    };
+
   
   
 
@@ -237,7 +259,7 @@ useEffect(() => {
               <div className="booking-info mt-5">
                 <h5 className="mb-4 fw-bold ">Booking Information</h5>
                 <BookingForm name={userName} submitHandler={handleSubmit} />
-
+                
               </div>
             </Col>
 
@@ -299,6 +321,28 @@ useEffect(() => {
 
           </Row>
         </Container>
+        <Modal
+                open={showPaypalModal}
+                onCancel={handlePaypalCancel}
+                footer={null}
+              >
+                <PayPalScriptProvider options={{ "client-id": "ARFk56Z6-jq9lnFzDX5bq8pnghtuUynomKwt8PqQiX1wv61d6JMkkD8ioJfYX0GSpPr1HZoxIK8a_5La" }}> {/* Replace YOUR_PAYPAL_CLIENT_ID with your actual PayPal client ID */}
+                  <PayPalButtons
+                    style={{ layout: 'horizontal' }}
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [{
+                          amount: {
+                            value: carDetails.price,
+                          },
+                        }],
+                      });
+                    }}
+                    onApprove={handlePaypalSuccess}
+                  />
+                </PayPalScriptProvider>
+                <Button onClick={handlePaypalCancel}>Cancel</Button>
+              </Modal>
       </section>
     </Helmet>
   );
