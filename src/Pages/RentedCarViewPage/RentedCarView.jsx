@@ -109,7 +109,8 @@ const RentedCarView = () => {
           <p>Renter Name: {record.name}</p> {/* Include the name field */}
           <p>Phone: {record.phone}</p>
           <p>Email: {record.email}</p>
-          <p>Price: {record.price}</p>
+          <p>Price/Day: {record.price}</p>
+          <p>Total Price: {record.totalPrice}</p>
           <p>Pick-up Date: {formatDate(record.startDate)}</p>
           <p>Return Date: {formatDate(record.endDate)}</p>
           <p>Booking Date: {formatDate(record.createdAt)}</p>
