@@ -5,10 +5,13 @@ import CommonSection from "../../UI/CommonSection/CommonSection";
 import CarItem from "../../UI/CarItem/CarItem";
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { Pagination } from 'antd';
 
 const CarListing = () => {
   const [carList, setCarList] = useState([]);
   const [sortMethod, setSortMethod] = useState(""); // State variable for sorting method
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12); // Number of items per page
   const location = useLocation();
 
   useEffect(() => {
@@ -50,6 +53,16 @@ const CarListing = () => {
     setSortMethod(e.target.value);
   };
 
+  // Change page
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Get current items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortCars().slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <Helmet title="Cars">
       <CommonSection title="Car Listing" />
@@ -69,13 +82,23 @@ const CarListing = () => {
                 </select>
               </div>
             </Col>
-            {sortCars().length === 0 ? (
+            {currentItems.length === 0 ? (
               <Col lg="12" className="text-center text-gray-500 mt-4 text-2xl">No cars available yet</Col>
             ) : (
-              sortCars().map((item) => (
+              currentItems.map((item) => (
                 <CarItem item={item} key={item.id} />
               ))
             )}
+            <Col lg="12" className="mt-4">
+              {carList.length > itemsPerPage && (
+                <Pagination
+                  current={currentPage}
+                  total={carList.length}
+                  pageSize={itemsPerPage}
+                  onChange={handlePageChange}
+                />
+              )}
+            </Col>
           </Row>
         </Container>
       </section>

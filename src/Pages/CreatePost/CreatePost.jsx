@@ -213,7 +213,7 @@ const CreatePost = () => {
     {/* Confirmation Modal */}
     <Modal
         title="Confirmation"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
         okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700' }}
