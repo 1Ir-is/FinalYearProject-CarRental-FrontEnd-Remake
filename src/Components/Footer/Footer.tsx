@@ -74,8 +74,8 @@ const Footer = () => {
             <div className="mb-4">
               <h5 className="footer__link-title mb-4">Head Office</h5>
               <p className="office__info">Ngu Hanh Son, Da Nang</p>
-              <p className="office__info">Phone: +091423212344</p>
-              <p className="office__info">Email: huyhk@gmail.com</p>
+              <p className="office__info">Phone: +0914048099</p>
+              <p className="office__info">Email: arsherwinphonguniverse@gmail.com</p>
               <p className="office__info">Office Time: 10am - 7pm</p>
             </div>
           </Col>

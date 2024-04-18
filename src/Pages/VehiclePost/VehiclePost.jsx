@@ -146,16 +146,17 @@ const VehiclePost = () => {
       key: 'address',
     },
     {
-      title: 'Price',
+      title: 'Price/Day',
       dataIndex: 'price',
       key: 'price',
+      render: (price) => `$${price}` 
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
       render: (rating) => (
-        <span>{rating.toFixed(1)}</span> // Display rating with one decimal place
+        <span>{rating.toFixed(1)}</span>
       ),
     },
     

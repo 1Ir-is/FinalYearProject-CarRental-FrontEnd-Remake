@@ -8,8 +8,6 @@ const RentalDetail = () => {
   const [rentalDetails, setRentalDetails] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(rentalDetails);
-
   useEffect(() => {
     const fetchRentalDetails = async () => {
       try {
@@ -33,7 +31,7 @@ const RentalDetail = () => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Renter Name',
       dataIndex: 'name',
       key: 'name',
     },
@@ -74,14 +72,14 @@ const RentalDetail = () => {
       title: 'Total Price',
       dataIndex: 'totalPrice',
       key: 'totalPrice',
+      render: (totalPrice) => `$${totalPrice}` 
     },
-    // Add more columns as needed
   ];
 
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <hr className="mt-0 mb-4"/>
-      <Link to="/vehicle-post" className="btn btn-primary mb-3">Back</Link> {/* Back button */}
+      <Link to="/vehicle-post" className="btn btn-primary mb-3">Back</Link> 
       <div className="card shadow mb-4">
         <div className="card-header py-3">
             <h6 className="m-0 font-weight-bold text-primary">Renter List</h6>

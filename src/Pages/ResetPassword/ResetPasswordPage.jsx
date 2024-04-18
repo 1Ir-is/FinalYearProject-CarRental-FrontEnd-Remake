@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Spin, Modal, message } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; 
 import { useParams } from 'react-router-dom';
@@ -12,7 +12,6 @@ const ResetPasswordPage = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [error, setError] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false); 
@@ -48,7 +47,8 @@ const ResetPasswordPage = () => {
       setLoading(false); 
 
       if (response.status === 200) {
-        setShowSuccessMessage(true);
+        message.success('Password reset successfully!');
+        setIsModalVisible(false); // Close modal if open
       } else {
         setError(response.data.message || 'An error occurred');
       }
@@ -63,33 +63,17 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const handleOk = async () => {
-    setIsModalVisible(false);
-    // No need to set loading here as it's handled in handleResetPassword
-    try {
-      const response = await axios.post('https://localhost:7228/api/Auth/reset-password', {
-        email,
-        resetKey,
-        newPassword
-      });
-      if (response.status === 200) {
-        setShowSuccessMessage(true);
-      } else {
-        setError(response.data.message || 'An error occurred');
-      }
-    } catch (error) {
-      if (error.response) {
-        setError(error.response.data.message || 'An error occurred');
-      } else {
-        setError('An error occurred while processing your request');
-      }
-      console.error('Error:', error);
-    }
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsModalVisible(false);
+    }, 5000); // Set timeout duration in milliseconds (e.g., 5000 milliseconds = 5 seconds)
+    
+    return () => clearTimeout(timeout);
+  }, [isModalVisible]);
 
   return (
     <div className="flex items-center justify-center" style={{ 
@@ -103,11 +87,6 @@ const ResetPasswordPage = () => {
         {loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white opacity-75 z-50">
             <Spin tip="Resetting password..." />
-          </div>
-        )}
-        {showSuccessMessage && (
-          <div className="text-center mb-4">
-            <p className="text-green-500">Password reset successfully!</p>
           </div>
         )}
         <h2 className="text-2xl mb-4">Reset Password</h2>
@@ -158,7 +137,7 @@ const ResetPasswordPage = () => {
         <Modal
           title="Confirmation"
           open={isModalVisible}
-          onOk={handleOk}
+          onOk={handleResetPassword}
           onCancel={handleCancel}
           okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700' }}
           cancelButtonProps={{ className: 'bg-red-500 hover:bg-red-700' }}
