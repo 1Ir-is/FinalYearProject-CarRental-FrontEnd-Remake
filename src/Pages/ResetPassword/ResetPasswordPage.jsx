@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Spin, Modal, message } from 'antd';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'; 
-import carChangeImage from '../../assets/all-images/forgot-password.webp'; 
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+
+import carChangeImage from '../../assets/all-images/muscle-car-retro-vintage-car-sunset-neon-5k-2560x1440-1229.jpg'; 
+
+import axios from 'axios';
 
 const ResetPasswordPage = () => {
   const { email, resetKey } = useParams();
@@ -31,12 +33,11 @@ const ResetPasswordPage = () => {
     }
 
     if (newPassword !== confirmPassword) {
-        message.error('Passwords do not match');
+      message.error('Passwords do not match');
       return;
     }
 
     try {
-      setIsModalVisible(true); 
       setLoading(true); 
       const response = await axios.post('https://localhost:7228/api/Auth/reset-password', {
         email,
@@ -62,8 +63,28 @@ const ResetPasswordPage = () => {
     }
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setIsModalVisible(false);
+    // No need to set loading here as it's handled in handleResetPassword
+    try {
+      const response = await axios.post('https://localhost:7228/api/Auth/reset-password', {
+        email,
+        resetKey,
+        newPassword
+      });
+      if (response.status === 200) {
+        setShowSuccessMessage(true);
+      } else {
+        setError(response.data.message || 'An error occurred');
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message || 'An error occurred');
+      } else {
+        setError('An error occurred while processing your request');
+      }
+      console.error('Error:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -128,15 +149,15 @@ const ResetPasswordPage = () => {
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <div className="text-center">
           <button
-            onClick={handleResetPassword}
-            className={`w-full ${loading ? 'opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3'}`}
+            onClick={() => setIsModalVisible(true)}
+            className={`w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3`}
           >
             Reset Password
           </button>
         </div>
         <Modal
           title="Confirmation"
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
           okButtonProps={{ className: 'bg-sky-500 hover:bg-sky-700' }}

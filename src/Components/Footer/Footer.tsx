@@ -97,7 +97,7 @@ const Footer = () => {
           <Col lg="12">
             <div className="footer__bottom">
               <p className="section__description d-flex align-items-center justify-content-center gap-1 pt-4">
-                <i className="ri-copyright-line"></i>AutoRent Da Nang {year}. All rights reserved.
+                  AutoRent DaNang&nbsp;© 2024 AutoRent DaNang, Inc. All Rights Reserved.
               </p>
             </div>
           </Col>
