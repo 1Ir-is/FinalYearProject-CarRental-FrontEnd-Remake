@@ -1,21 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Divider, Input, Form, Button, Avatar, InputNumber, Radio, Modal } from "antd";
+import { Divider, Input, Form, Button, Avatar, InputNumber, Radio, Modal, Typography, Rate, Pagination, message } from "antd";
+import { TeamOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 import { Container, Row, Col } from "reactstrap";
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { useAuth } from "../../Context/useAuth";
+
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import axios from "axios";
 import Helmet from "../../Components/Helmet/Helmet";
-import { message } from "antd";
 import BookingForm from "../BookingForm/BookingForm";
 import PaymentMethod from "../PaymentMethod/PaymentMethod";
-import { TeamOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import { useAuth } from "../../Context/useAuth";
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const { TextArea } = Input;
+const { Text } = Typography;
 
 const CarDetails = () => {
   const { id } = useParams();
+  const { user } = useAuth();
+  const userName = user?.name;
+  const userId = user?.userId;
   const [carDetails, setCarDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,21 +27,33 @@ const CarDetails = () => {
   const [rating, setRating] = useState(0);
   const [trustPoint, setTrustPoint] = useState(0);
   const [reviews, setReviews] = useState([]);
-  const { user } = useAuth();
-  const userId = user?.userId;
-  const userName = user?.name;
   const [userAvatar, setUserAvatar] = useState(null)
-  const navigate = useNavigate();
   const [showPaypalModal, setShowPaypalModal] = useState(false);
   const [bookingData, setBookingData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const navigate = useNavigate();
 
+  const pageSize = 5;
+
+  const indexOfLastReview = currentPage * pageSize;
+  const indexOfFirstReview = indexOfLastReview - pageSize;
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleRatingChange = (value) => {
+    setRating(value);
+  };
 
 useEffect(() => {
     // Fetch user's avatar from backend API
     const fetchUserAvatar = async () => {
       try {
-        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`); // Adjust the endpoint URL
-        setUserAvatar(response.data.avatar); // Set user's avatar URL in state
+        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`); 
+        setUserAvatar(response.data.avatar); 
       } catch (error) {
         console.error('Error fetching user avatar:', error);
       }
@@ -68,15 +84,25 @@ useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(`https://localhost:7228/api/Home/review-car/${id}`);
-        setReviews(response.data);
+        const reviewsWithUserData = await Promise.all(response.data.map(async (review) => {
+          const userDataResponse = await axios.get(`https://localhost:7228/api/User/${review.userId}`);
+          const userData = userDataResponse.data;
+          return {
+            ...review,
+            userName: userData.name,
+            userAvatar: userData.avatar
+          };
+        }));
+        setReviews(reviewsWithUserData);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
     };
-
+  
     fetchReviews();
   }, [id]);
-
+  
+  
   const handleSubmitReview = async () => {
     try {
       const response = await axios.post(`https://localhost:7228/api/Home/add-review?userId=${userId}`, {
@@ -86,20 +112,21 @@ useEffect(() => {
         postVehicleId: carDetails.id,
       });
   
-      // Assuming the server responds with the complete review object including all necessary fields
+  
       const newReview = {
         id: response.data.id,
-        avatar: userAvatar,
-        author: userName,
+        userName: userName, 
+        userAvatar: userAvatar, 
         rating,
         trustPoint,
         content: comment,
+        createdDate: response.data.createdDate 
       };
   
-      // Update the reviews state by prepending the new review
       setReviews([newReview, ...reviews]);
-  
-      // Clear the form fields
+      console.log("Review submitted successfully:", response.data);
+      console.log("New review:", newReview);
+
       setComment("");
       setRating(0);
       setTrustPoint(0);
@@ -108,21 +135,21 @@ useEffect(() => {
       console.error("Error submitting review:", error);
     }
   };
+  
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevent default form submission
-  
-    // Convert form data to JSON
+    event.preventDefault(); 
+     
     const formData = new FormData(event.target);
     const startDate = new Date(formData.get("startDate"));
     const endDate = new Date(formData.get("endDate"));
     const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-    // Calculate total price
+   
     const totalPrice = carDetails.price * days;
 
-      // Set totalPrice in localStorage
-  localStorage.setItem("totalPrice", totalPrice);
+  
+    localStorage.setItem("totalPrice", totalPrice);
 
     const newBookingData = {
       name: formData.get("name"),
@@ -135,10 +162,8 @@ useEffect(() => {
       totalPrice: totalPrice,
     };
   
-    // Set bookingData state
+    
     setBookingData(newBookingData);
-  
-    // Open PayPal modal
     setShowPaypalModal(true);
   };
 
@@ -150,17 +175,17 @@ useEffect(() => {
     try {
       // Call API order after PayPal payment success
       const response = await axios.post(
-        `https://localhost:7228/api/Home/rent-vehicle/${userId}`, // Pass user ID to API endpoint
-        bookingData // Use bookingData from state
+        `https://localhost:7228/api/Home/rent-vehicle/${userId}`,
+        bookingData 
       );
-      setLoading(false); // Set loading state to false after submission
-      console.log(response.data); // Log success message
-      message.success("Vehicle rented successfully!"); // Show success message
-      navigate("/rented-car"); // Redirect to rental list page
+      setLoading(false); 
+      console.log(response.data);
+      message.success("Vehicle rented successfully!");
+      navigate("/rented-car"); 
     } catch (error) {
-      setLoading(false); // Set loading state to false on error
-      console.error("Error submitting order:", error); // Log error message
-      message.error("Error submitting order. Please try again."); // Show error message
+      setLoading(false);
+      console.error("Error submitting order:", error); 
+      message.error("Error submitting order. Please try again.");
     }
   };
 
@@ -169,9 +194,6 @@ useEffect(() => {
       message.error("Payment cancelled!");
       console.log("PayPal payment cancelled!");
     };
-
-  
-  
 
   if (loading) {
     return <p>Loading...</p>;
@@ -204,14 +226,8 @@ useEffect(() => {
                   </h6>
 
                   <span className="d-flex align-items-center gap-2">
-                    <span style={{ color: "#f9a826" }}>
-                      <i className="ri-star-s-fill"></i>
-                      <i className="ri-star-s-fill"></i>
-                      <i className="ri-star-s-fill"></i>
-                      <i className="ri-star-s-fill"></i>
-                      <i className="ri-star-s-fill"></i>
-                    </span>
-                    ({carDetails.rating.toFixed(1)} ratings) {/* Display rating with one decimal place */}
+                    <Rate disabled allowHalf value={carDetails.rating} /> 
+                    ({carDetails.rating.toFixed(1)} ratings)
                   </span>
 
                 </div>
@@ -290,12 +306,10 @@ useEffect(() => {
                 <TextArea rows={4} value={comment} onChange={(e) => setComment(e.target.value)} />
               </Form.Item>
               <Form.Item label="Rating">
-                <Radio.Group onChange={(e) => setRating(e.target.value)} value={rating}>
-                  <Radio value={1}>1</Radio>
-                  <Radio value={2}>2</Radio>
-                  <Radio value={3}>3</Radio>
-                  <Radio value={4}>4</Radio>
-                  <Radio value={5}>5</Radio>
+                <Radio.Group onChange={(e) => handleRatingChange(e.target.value)} value={rating}>
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <Radio key={value} value={value}>{value}</Radio>
+                  ))}
                 </Radio.Group>
               </Form.Item>
               <Form.Item label="Trust Point">
@@ -318,16 +332,33 @@ useEffect(() => {
           <Row>
           <Col span={24}>
             <h3>Reviews</h3>
-            {reviews && reviews.map((review) => (
-              <div key={review.id} style={{ marginBottom: "16px" }}>
-                <Avatar src={userAvatar}></Avatar>
-                {userName && <p key={`author-${review.id}`}>{userName}</p>}
-                <p>Rating: {review.rating}</p>
-                <p>Trust Point: {review.trustPoint}</p>
-                <p>{review.content}</p>
+            {currentReviews.map((review) => (
+              <div key={review.id} className="single__comment d-flex gap-3">
+                <Avatar src={review.userAvatar} icon={<UserOutlined />} size={64} />
+                <div className="comment__content">
+                  <h6 className="fw-bold">{review.userName}</h6>
+                  <div>
+                    <Text strong>Rating:</Text>{' '}
+                    <Rate disabled defaultValue={review.rating} allowHalf={true} value={review.rating} />
+                  </div>
+                  <div>
+                    <Text strong>Trust Point:</Text> {review.trustPoint}
+                  </div>
+                  <p className="section__description">{review.content}</p>
+                </div>
               </div>
             ))}
+            {reviews.length > pageSize && (
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={reviews.length}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+              />
+            )}
           </Col>
+
 
           </Row>
         </Container>
@@ -336,21 +367,31 @@ useEffect(() => {
                 onCancel={handlePaypalCancel}
                 footer={null}
               >
-                <PayPalScriptProvider options={{ "client-id": "ARFk56Z6-jq9lnFzDX5bq8pnghtuUynomKwt8PqQiX1wv61d6JMkkD8ioJfYX0GSpPr1HZoxIK8a_5La" }}> {/* Replace YOUR_PAYPAL_CLIENT_ID with your actual PayPal client ID */}
-                  <PayPalButtons
-                    style={{ layout: 'horizontal' }}
-                    createOrder={(data, actions) => {
-                      return actions.order.create({
-                        purchase_units: [{
-                          amount: {
-                            value: localStorage.getItem("totalPrice"),
-                          },
-                        }],
-                      });
-                    }}
-                    onApprove={handlePaypalSuccess}
-                  />
-                </PayPalScriptProvider>
+              <PayPalScriptProvider options={{ "client-id": "ARFk56Z6-jq9lnFzDX5bq8pnghtuUynomKwt8PqQiX1wv61d6JMkkD8ioJfYX0GSpPr1HZoxIK8a_5La" }}>
+                <PayPalButtons
+                  style={{ layout: 'horizontal' }}
+                  createOrder={(data, actions) => {
+                    return actions.order.create({
+                      purchase_units: [{
+                        amount: {
+                          value: localStorage.getItem("totalPrice"),
+                        },
+                      }],
+                    });
+                  }}
+                  onApprove={(data, actions) => {
+                    // Handle successful payment
+                    handlePaypalSuccess(data, actions);
+                  }}
+                  onError={(err) => {
+                    // Handle errors
+                    console.error('PayPal error:', err);
+                    // Optionally, display an error message to the user
+                    message.error('An error occurred while processing the payment. Please try again.');
+                  }}
+                />
+              </PayPalScriptProvider>
+
                 <Button onClick={handlePaypalCancel}>Cancel</Button>
               </Modal>
       </section>

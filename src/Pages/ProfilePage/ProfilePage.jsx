@@ -12,7 +12,7 @@ const ProfilePage = () => {
     name: '',
     address: '',
     phone: '',
-    trustPoint: null,
+    trustPoint: 0, // Set a default value for trustPoint
     avatar: null,
   });
   const [uploading, setUploading] = useState(false); // State variable to track image upload status
@@ -23,13 +23,14 @@ const ProfilePage = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`https://localhost:7228/api/User/${currentUser.userId}`);
+        console.log('User data response:', response.data); // Log response data
         const userData = response.data;
         setFormData({
           name: userData.name,
           address: userData.address,
           phone: userData.phone,
           avatar: userData.avatar,
-          trustPoint: userData.trustPoint,
+          trustPoint: userData.trustPoint || 0, // Set trustPoint with a default value if it's not provided
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -168,11 +169,11 @@ const ProfilePage = () => {
                     </Form.Item>
                   </Col>
                   <Col xs={24} sm={12}>
-                    <Form.Item label="Trust score">
-                      <div style={{ border: '1px solid #d9d9d9', padding: '8px', borderRadius: '4px', width: 'fit-content' }}>
-                        <span>{formData.trustPoint !== null ? formData.trustPoint.toFixed(1) : 'N/A'}</span>
-                      </div>
-                    </Form.Item>
+                  <Form.Item label="Trust score">
+                    <div style={{ border: '1px solid #d9d9d9', padding: '8px', borderRadius: '4px', width: 'fit-content' }}>
+                      <span>{formData.trustPoint !== null ? formData.trustPoint.toFixed(1) : 'N/A'}</span>
+                    </div>
+                  </Form.Item>
                   </Col>
                   <Col xs={24}>
                     <Form.Item label="Avatar">
