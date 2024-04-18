@@ -138,7 +138,7 @@ const Navbar = (props) => {
                   >
                     <i className="ri-car-line"></i>
                     <span>
-                      Rent Car <br /> Service
+                      AutoRent <br /> Da Nang
                     </span>
                   </Link>
                 </h1>

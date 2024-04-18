@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 
 const CarListing = () => {
   const [carList, setCarList] = useState([]);
+  const [sortMethod, setSortMethod] = useState(""); // State variable for sorting method
   const location = useLocation();
 
   useEffect(() => {
@@ -33,6 +34,22 @@ const CarListing = () => {
     fetchCars();
   }, [location]);
 
+  // Sorting function
+  const sortCars = () => {
+    let sortedCars = [...carList];
+    if (sortMethod === "low") {
+      sortedCars.sort((a, b) => a.price - b.price);
+    } else if (sortMethod === "high") {
+      sortedCars.sort((a, b) => b.price - a.price);
+    }
+    return sortedCars;
+  };
+
+  // Handler for sorting method change
+  const handleSortChange = (e) => {
+    setSortMethod(e.target.value);
+  };
+
   return (
     <Helmet title="Cars">
       <CommonSection title="Car Listing" />
@@ -40,25 +57,22 @@ const CarListing = () => {
       <section>
         <Container>
           <Row>
-            {carList.length === 0 ? null : (
-              <Col lg="12">
-                <div className="d-flex align-items-center gap-3 mb-5">
-                  <span className="d-flex align-items-center gap-2">
-                    <i className="ri-sort-asc"></i> Sort By
-                  </span>
-                  <select className="box-border h-10 w-32 border-2">
-                    <option>Select</option>
-                    <option value="low">Low to High</option>
-                    <option value="high">High to Low</option>
-                  </select>
-                </div>
-              </Col>
-            )}
-
-            {carList.length === 0 ? (
-                 <Col lg="12" className="text-center text-gray-500 mt-4 text-2xl">No cars available yet</Col>
+            <Col lg="12">
+              <div className="d-flex align-items-center gap-3 mb-5">
+                <span className="d-flex align-items-center gap-2">
+                  <i className="ri-sort-asc"></i> Sort By
+                </span>
+                <select className="box-border h-10 w-32 border-2" onChange={handleSortChange}>
+                  <option value="">Select</option>
+                  <option value="low">Low to High</option>
+                  <option value="high">High to Low</option>
+                </select>
+              </div>
+            </Col>
+            {sortCars().length === 0 ? (
+              <Col lg="12" className="text-center text-gray-500 mt-4 text-2xl">No cars available yet</Col>
             ) : (
-              carList.map((item) => (
+              sortCars().map((item) => (
                 <CarItem item={item} key={item.id} />
               ))
             )}
