@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
-import Talk from 'talkjs';
+import { useEffect } from 'react';
 import { useAuth } from '../../Context/useAuth';
+
+import Talk from 'talkjs';
 
 
 function TalkJs() {

@@ -1,7 +1,7 @@
 import { Spin, Table } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const RentalDetail = () => {
   const { rentalId } = useParams();
@@ -56,11 +56,19 @@ const RentalDetail = () => {
       title: 'Start Date',
       dataIndex: 'startDate',
       key: 'startDate',
+      render: (startDate) => new Date(startDate).toLocaleString('en-GB'),
     },
     {
       title: 'End Date',
       dataIndex: 'endDate',
       key: 'endDate',
+      render: (endDate) => new Date(endDate).toLocaleString('en-GB'),
+    },
+    {
+      title: 'Booking Date',
+      dataIndex: 'createDate',
+      key: 'createDate',
+      render: (createDate) => new Date(createDate).toLocaleString('en-GB'),
     },
     {
       title: 'Total Price',
@@ -70,11 +78,10 @@ const RentalDetail = () => {
     // Add more columns as needed
   ];
 
-
-
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <hr className="mt-0 mb-4"/>
+      <Link to="/vehicle-post" className="btn btn-primary mb-3">Back</Link> {/* Back button */}
       <div className="card shadow mb-4">
         <div className="card-header py-3">
             <h6 className="m-0 font-weight-bold text-primary">Renter List</h6>
@@ -98,6 +105,7 @@ const RentalDetail = () => {
                     startDate: rental.startDate,
                     endDate: rental.endDate,
                     totalPrice: rental.totalPrice,
+                    createDate: rental.createDate,
                     // Add more data fields as needed
                   }))}
                 />

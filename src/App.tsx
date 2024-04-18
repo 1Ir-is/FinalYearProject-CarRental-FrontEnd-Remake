@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import "react-toastify/dist/ReactToastify.css";
-import "./App.css";
 import { ToastContainer } from "react-toastify";
 import { UserProvider } from "./Context/useAuth";
-import TalkJs from './Components/ChatBox/TalkJs'; // Import TalkJs here
 import { Modal } from 'antd';
-import { MessageOutlined } from '@ant-design/icons';
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
-
-// Define a function to check if the current location is ForbiddenPage
+import { useAuth } from './Context/useAuth';
 import { Location } from 'history';
+
+import TalkJs from './Components/ChatBox/TalkJs'; 
+
+import ToggleMessage  from "./assets/all-images/icons8-chat.gif";
+
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+
 import Navbar from './Components/Navbar/Navbar';
 import Footer from './Components/Footer/Footer';
 
@@ -20,6 +22,7 @@ const isForbiddenPage = (location: Location) => {
 };
 
 function App() {
+  
   const location = useLocation(); // Get the current location
   const isForbidden = isForbiddenPage(location); // Check if it's ForbiddenPage
 
@@ -36,10 +39,12 @@ function App() {
         {!isForbidden && <Navbar />}
         <Outlet />
         {/* Render TalkJs and other components */}
-        <div style={{ position: 'relative' , backgroundColor: 'white'}}>
-          <MessageOutlined
+        <div style={{ position: 'relative', backgroundColor: 'white' }}>
+          <img
+            src={ToggleMessage}
+            alt="Message Icon"
             onClick={toggleTalkJs}
-            style={{ position: 'fixed', bottom: '100px', right: '20px', fontSize: '35px', color: '#1890ff', cursor: 'pointer' }}
+            style={{ position: 'fixed', bottom: '100px', right: '20px', width: '55px', height: '55px', cursor: 'pointer', backgroundColor: 'transparent' }}
           />
           <Modal
             title="Chat"

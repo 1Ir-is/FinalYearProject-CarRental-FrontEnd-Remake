@@ -18,8 +18,7 @@ const { Text } = Typography;
 const CarDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
-  const userName = user?.name;
-  const userId = user?.userId;
+
   const [carDetails, setCarDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -31,6 +30,9 @@ const CarDetails = () => {
   const [showPaypalModal, setShowPaypalModal] = useState(false);
   const [bookingData, setBookingData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const userName = user?.name;
+  const userId = user?.userId;
   
   const navigate = useNavigate();
 

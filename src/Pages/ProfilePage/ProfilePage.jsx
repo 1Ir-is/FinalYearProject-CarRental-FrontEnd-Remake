@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Input, Button, Row, Col, message, Modal, Progress, Spin } from 'antd';
 import { useAuth } from '../../Context/useAuth';
+import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration';
+
 import axios from 'axios';
 import CustomNavLinks from '../../Components/CustomNavlink/CustomNavlink';
+
 import './ProfilePage.css';
-import { uploadImageToCloudinary } from '../../Components/Cloudinary/CloudinaryConfiguration';
 
 const ProfilePage = () => {
   const { user: currentUser, setUser: setCurrentUser } = useAuth();
