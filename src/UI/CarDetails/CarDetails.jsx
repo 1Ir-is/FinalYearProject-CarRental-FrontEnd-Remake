@@ -33,7 +33,7 @@ const CarDetails = () => {
 
   const userName = user?.name;
   const userId = user?.userId;
-  
+
   const navigate = useNavigate();
 
   const pageSize = 5;
@@ -50,12 +50,12 @@ const CarDetails = () => {
     setRating(value);
   };
 
-useEffect(() => {
+  useEffect(() => {
     // Fetch user's avatar from backend API
     const fetchUserAvatar = async () => {
       try {
-        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`); 
-        setUserAvatar(response.data.avatar); 
+        const response = await axios.get(`https://localhost:7228/api/User/avatar/${user.userId}`);
+        setUserAvatar(response.data.avatar);
       } catch (error) {
         console.error('Error fetching user avatar:', error);
       }
@@ -100,11 +100,11 @@ useEffect(() => {
         console.error("Error fetching reviews:", error);
       }
     };
-  
+
     fetchReviews();
   }, [id]);
-  
-  
+
+
   const handleSubmitReview = async () => {
     try {
       const response = await axios.post(`https://localhost:7228/api/Home/add-review?userId=${userId}`, {
@@ -113,18 +113,18 @@ useEffect(() => {
         content: comment,
         postVehicleId: carDetails.id,
       });
-  
-  
+
+
       const newReview = {
         id: response.data.id,
-        userName: userName, 
-        userAvatar: userAvatar, 
+        userName: userName,
+        userAvatar: userAvatar,
         rating,
         trustPoint,
         content: comment,
-        createdDate: response.data.createdDate 
+        createdDate: response.data.createdDate
       };
-  
+
       setReviews([newReview, ...reviews]);
       console.log("Review submitted successfully:", response.data);
       console.log("New review:", newReview);
@@ -132,25 +132,25 @@ useEffect(() => {
       setComment("");
       setRating(0);
       setTrustPoint(0);
-  
+
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
-  
+
 
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
-     
+    event.preventDefault();
+
     const formData = new FormData(event.target);
     const startDate = new Date(formData.get("startDate"));
     const endDate = new Date(formData.get("endDate"));
     const days = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-   
+
     const totalPrice = carDetails.price * days;
 
-  
+
     localStorage.setItem("totalPrice", totalPrice);
 
     const newBookingData = {
@@ -163,13 +163,13 @@ useEffect(() => {
       postVehicleId: carDetails.id,
       totalPrice: totalPrice,
     };
-  
-    
+
+
     setBookingData(newBookingData);
     setShowPaypalModal(true);
   };
 
-  
+
   const handlePaypalSuccess = async (details, data) => {
     console.log("PayPal payment successful!");
     setShowPaypalModal(false);
@@ -178,24 +178,24 @@ useEffect(() => {
       // Call API order after PayPal payment success
       const response = await axios.post(
         `https://localhost:7228/api/Home/rent-vehicle/${userId}`,
-        bookingData 
+        bookingData
       );
-      setLoading(false); 
+      setLoading(false);
       console.log(response.data);
       message.success("Vehicle rented successfully!");
-      navigate("/rented-car"); 
+      navigate("/rented-car");
     } catch (error) {
       setLoading(false);
-      console.error("Error submitting order:", error); 
+      console.error("Error submitting order:", error);
       message.error("Error submitting order. Please try again.");
     }
   };
 
-    const handlePaypalCancel = () => {
-      setShowPaypalModal(false);
-      message.error("Payment cancelled!");
-      console.log("PayPal payment cancelled!");
-    };
+  const handlePaypalCancel = () => {
+    setShowPaypalModal(false);
+    message.error("Payment cancelled!");
+    console.log("PayPal payment cancelled!");
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -228,7 +228,7 @@ useEffect(() => {
                   </h6>
 
                   <span className="d-flex align-items-center gap-2">
-                    <Rate disabled allowHalf value={carDetails.rating} /> 
+                    <Rate disabled allowHalf value={carDetails.rating} />
                     ({carDetails.rating.toFixed(1)} ratings)
                   </span>
 
@@ -283,119 +283,129 @@ useEffect(() => {
               </div>
             </Col>
 
-            <Col lg="7" className="mt-5">
-              <div className="booking-info mt-5">
-                <h5 className="mb-4 fw-bold ">Booking Information</h5>
-                <BookingForm name={userName} submitHandler={handleSubmit} />
-                
-              </div>
-            </Col>
+            {user ? (
+              <>
+                <Col lg="7" className="mt-5">
+                  <div className="booking-info mt-5">
+                    <h5 className="mb-4 fw-bold ">Booking Information</h5>
+                    <BookingForm name={userName} submitHandler={handleSubmit} />
 
-            <Col lg="5" className="mt-5">
-              <div className="payment__info mt-5">
-                <h5 className="mb-4 fw-bold ">Information To Rent</h5>
-                <PaymentMethod />
-              </div>
-            </Col>
-          </Row>
+                  </div>
+                </Col>
 
-          <Divider />
+                <Col lg="5" className="mt-5">
+                  <div className="payment__info mt-5">
+                    <h5 className="mb-4 fw-bold ">Information To Rent</h5>
+                    <PaymentMethod />
+                  </div>
+                </Col>
 
-          <Row>
-            <Col span={24}>
-              <h3>Leave The Reviews</h3>
-              <Form.Item>
-                <TextArea rows={4} value={comment} onChange={(e) => setComment(e.target.value)} />
-              </Form.Item>
-              <Form.Item label="Rating">
-                <Radio.Group onChange={(e) => handleRatingChange(e.target.value)} value={rating}>
-                  {[1, 2, 3, 4, 5].map((value) => (
-                    <Radio key={value} value={value}>{value}</Radio>
+                <Divider />
+
+                <Col span={24}>
+                  <h3>Leave The Reviews</h3>
+                  <Form.Item>
+                    <TextArea rows={4} value={comment} onChange={(e) => setComment(e.target.value)} />
+                  </Form.Item>
+                  <Form.Item label="Rating">
+                    <Radio.Group onChange={(e) => handleRatingChange(e.target.value)} value={rating}>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <Radio key={value} value={value}>{value}</Radio>
+                      ))}
+                    </Radio.Group>
+                  </Form.Item>
+                  <Form.Item label="Trust Point">
+                    <InputNumber min={1} max={10} value={trustPoint} onChange={(value) => setTrustPoint(value)} />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button
+                      htmlType="submit"
+                      onClick={handleSubmitReview}
+                      type="primary"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded"
+                    >
+                      Submit Review
+                    </Button>
+                  </Form.Item>
+                </Col>
+
+                <Divider />
+
+                <Col span={24}>
+                  <h3>Reviews</h3>
+                  {currentReviews.map((review) => (
+                    <div key={review.id} className="single__comment d-flex gap-3">
+                      <Avatar src={review.userAvatar} icon={<UserOutlined />} size={64} />
+                      <div className="comment__content">
+                        <h6 className="fw-bold">{review.userName}</h6>
+                        <div>
+                          <Text strong>Rating:</Text>{' '}
+                          <Rate disabled defaultValue={review.rating} allowHalf={true} value={review.rating} />
+                        </div>
+                        <div>
+                          <Text strong>Trust Point:</Text> {review.trustPoint}
+                        </div>
+                        <p className="section__description">{review.content}</p>
+                      </div>
+                    </div>
                   ))}
-                </Radio.Group>
-              </Form.Item>
-              <Form.Item label="Trust Point">
-                <InputNumber min={1} max={10} value={trustPoint} onChange={(value) => setTrustPoint(value)} />
-              </Form.Item>
-              <Form.Item>
-              <Button
-                htmlType="submit"
-                onClick={handleSubmitReview}
-                type="primary"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded"
-              >
-                Submit Review
-              </Button>
+                  {reviews.length > pageSize && (
+                    <Pagination
+                      current={currentPage}
+                      pageSize={pageSize}
+                      total={reviews.length}
+                      onChange={handlePageChange}
+                      showSizeChanger={false}
+                    />
+                  )}
+                </Col>
+              </>
+            ) : (
+              <Col lg="12" className="mt-5">
+                <div className="login-info mt-5">
+                  <h5 className="mb-4 fw-bold ">Please Login Before Renting</h5>
+                  <Button type="primary" onClick={() => navigate("/login")} className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded">
+                    Login
+                  </Button>
 
-              </Form.Item>
-            </Col>
-          </Row>
-          <Divider />
-          <Row>
-          <Col span={24}>
-            <h3>Reviews</h3>
-            {currentReviews.map((review) => (
-              <div key={review.id} className="single__comment d-flex gap-3">
-                <Avatar src={review.userAvatar} icon={<UserOutlined />} size={64} />
-                <div className="comment__content">
-                  <h6 className="fw-bold">{review.userName}</h6>
-                  <div>
-                    <Text strong>Rating:</Text>{' '}
-                    <Rate disabled defaultValue={review.rating} allowHalf={true} value={review.rating} />
-                  </div>
-                  <div>
-                    <Text strong>Trust Point:</Text> {review.trustPoint}
-                  </div>
-                  <p className="section__description">{review.content}</p>
                 </div>
-              </div>
-            ))}
-            {reviews.length > pageSize && (
-              <Pagination
-                current={currentPage}
-                pageSize={pageSize}
-                total={reviews.length}
-                onChange={handlePageChange}
-                showSizeChanger={false}
-              />
+              </Col>
             )}
-          </Col>
-
 
           </Row>
         </Container>
         <Modal
-                open={showPaypalModal}
-                onCancel={handlePaypalCancel}
-                footer={null}
-              >
-              <PayPalScriptProvider options={{ "client-id": "ARFk56Z6-jq9lnFzDX5bq8pnghtuUynomKwt8PqQiX1wv61d6JMkkD8ioJfYX0GSpPr1HZoxIK8a_5La" }}>
-                <PayPalButtons
-                  style={{ layout: 'horizontal' }}
-                  createOrder={(data, actions) => {
-                    return actions.order.create({
-                      purchase_units: [{
-                        amount: {
-                          value: localStorage.getItem("totalPrice"),
-                        },
-                      }],
-                    });
-                  }}
-                  onApprove={(data, actions) => {
-                    // Handle successful payment
-                    handlePaypalSuccess(data, actions);
-                  }}
-                  onError={(err) => {
-                    // Handle errors
-                    console.error('PayPal error:', err);
-                    // Optionally, display an error message to the user
-                    message.error('An error occurred while processing the payment. Please try again.');
-                  }}
-                />
-              </PayPalScriptProvider>
+          open={showPaypalModal}
+          onCancel={handlePaypalCancel}
+          footer={null}
+        >
+          <PayPalScriptProvider options={{ "client-id": "ARFk56Z6-jq9lnFzDX5bq8pnghtuUynomKwt8PqQiX1wv61d6JMkkD8ioJfYX0GSpPr1HZoxIK8a_5La" }}>
+            <PayPalButtons
+              style={{ layout: 'horizontal' }}
+              createOrder={(data, actions) => {
+                return actions.order.create({
+                  purchase_units: [{
+                    amount: {
+                      value: localStorage.getItem("totalPrice"),
+                    },
+                  }],
+                });
+              }}
+              onApprove={(data, actions) => {
+                // Handle successful payment
+                handlePaypalSuccess(data, actions);
+              }}
+              onError={(err) => {
+                // Handle errors
+                console.error('PayPal error:', err);
+                // Optionally, display an error message to the user
+                message.error('An error occurred while processing the payment. Please try again.');
+              }}
+            />
+          </PayPalScriptProvider>
 
-                <Button onClick={handlePaypalCancel}>Cancel</Button>
-              </Modal>
+          <Button onClick={handlePaypalCancel}>Cancel</Button>
+        </Modal>
       </section>
     </Helmet>
   );
