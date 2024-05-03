@@ -21,16 +21,24 @@ const ForgotPasswordPage = () => {
           },
         }
       );
-      console.log('Response:', response.data);
       setLoading(false);
-      message.success('Password reset link sent successfully!');
-      form.resetFields(); 
+      if (response.status === 200) {
+        message.success('Password reset link sent successfully!');
+        form.resetFields();
+      } else {
+        message.error('Failed to send password reset link. Please try again later.');
+      }
     } catch (error) {
       setLoading(false);
-      console.error('An error occurred:', error);
-      message.error('Failed to send password reset link. Please try again later.');
+      if (error.response && error.response.status === 400 && error.response.data === 'Email not found') {
+        message.error('The email you entered does not exist in our records. Please try again.');
+      } else {
+        console.error('An error occurred:', error);
+        message.error('Failed to send password reset link or the email you entered does not exist in our records. Please try again later.');
+      }
     }
   };
+  
   
 
   return (

@@ -42,6 +42,8 @@ const CarDetails = () => {
   const indexOfFirstReview = indexOfLastReview - pageSize;
   const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
 
+  console.log(carDetails);
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -95,14 +97,25 @@ const CarDetails = () => {
             userAvatar: userData.avatar
           };
         }));
-        setReviews(reviewsWithUserData);
+  
+        // Filter out hidden reviews
+        const visibleReviews = reviewsWithUserData.filter(review => review.status !== 1); // Assuming status 1 represents visible
+  
+        setReviews(visibleReviews);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
     };
-
+  
+    // Fetch reviews initially
     fetchReviews();
+  
+    // Set interval to refresh reviews every 5 seconds
+    const intervalId = setInterval(fetchReviews, 3000); // Adjust the interval as needed
+  
+    return () => clearInterval(intervalId); // Clear interval on component unmount
   }, [id]);
+  
 
 
   const handleSubmitReview = async () => {
@@ -112,9 +125,9 @@ const CarDetails = () => {
         trustPoint,
         content: comment,
         postVehicleId: carDetails.id,
+        status: 1 // Assuming status 1 represents visible
       });
-
-
+  
       const newReview = {
         id: response.data.id,
         userName: userName,
@@ -124,19 +137,20 @@ const CarDetails = () => {
         content: comment,
         createdDate: response.data.createdDate
       };
-
+  
       setReviews([newReview, ...reviews]);
       console.log("Review submitted successfully:", response.data);
       console.log("New review:", newReview);
-
+  
       setComment("");
       setRating(0);
       setTrustPoint(0);
-
+  
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
+  
 
 
   const handleSubmit = async (event) => {
@@ -265,6 +279,8 @@ const CarDetails = () => {
                   <EnvironmentOutlined style={{ color: "#f9a826", fontSize: "24px" }} />
                   {carDetails.address}
                 </div>
+
+
                 <div className="section__description text-lg mt-3">
                   <div className="map-container">
                     <iframe

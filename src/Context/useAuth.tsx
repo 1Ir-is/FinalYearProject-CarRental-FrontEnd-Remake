@@ -41,6 +41,14 @@ export const UserProvider = ({ children }: Props) => {
     setIsReady(true);
   }, []);
 
+  const cacheUserData = (token: string, userData: UserProfile) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData));
+    setToken(token);
+    setUser(userData);
+    axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  };
+
   const registerUser = async (
     email: string,
     name: string,
@@ -62,11 +70,13 @@ export const UserProvider = ({ children }: Props) => {
     }
   };
 
+  
+
   const loginUser = async (email: string, password: string) => {
     await loginAPI(email, password)
       .then((res) => {
         if (res) {
-          localStorage.setItem("token", res?.data.token);
+          cacheUserData(res.data.token, res.data);
           const userObj: UserProfile = {
             userId: res?.data.userId,
             name: res?.data.name,
@@ -75,7 +85,7 @@ export const UserProvider = ({ children }: Props) => {
             phone: res?.data.phone,
             role: res?.data.role,
             avatar: res?.data.avatar,
-            trustPoint: res?.data.trustPoint // Include the trustPoint property
+            trustPoint: res?.data.trustPoint 
           };
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
@@ -91,7 +101,7 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const res = await loginAPIGoogle(email);
       if (res) {
-        localStorage.setItem("token", res?.data.token);
+        cacheUserData(res.data.token, res.data);
         const userObj: UserProfile = {
           userId: res?.data.userId,
           name: res?.data.name,

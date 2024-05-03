@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import bcrypt from "bcryptjs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";

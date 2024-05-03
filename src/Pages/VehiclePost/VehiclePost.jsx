@@ -13,6 +13,7 @@ const VehiclePost = () => {
   const userId = user?.userId;
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const fetchPostVehicles = async () => {
       try {
@@ -98,6 +99,24 @@ const VehiclePost = () => {
       }, 2000); // Set the timeout duration (in milliseconds)
     }
   };
+
+
+  const handleMarkAvailable = async (record) => {
+    try {
+      const response = await axios.post(`https://localhost:7228/api/Owner/mark-vehicle-available/${record.id}`);
+      if (response.status === 200) {
+        message.success(response.data);
+        // Update the status of the post vehicle locally
+        setPostVehicles(prevState => prevState.map(item => (item.id === record.id ? { ...item, status: false } : item)));
+      } else {
+        message.error('Failed to mark vehicle available');
+      }
+    } catch (error) {
+      console.error('Error marking vehicle available:', error);
+      message.error('Failed to mark vehicle available');
+    }
+  };
+
 
   const handleViewList = (record) => {
     // Navigate to the RentalDetail component with the postId as a URL parameter
@@ -203,6 +222,17 @@ const VehiclePost = () => {
           >
             View List
           </Button>
+        {record.status && record.isRented && (
+  <button
+    type="button"
+    onClick={() => handleMarkAvailable(record)}
+    className="bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-2 px-4 rounded"
+  >
+    Mark Available
+  </button>
+)}
+
+
         </Space>
       ),
     },

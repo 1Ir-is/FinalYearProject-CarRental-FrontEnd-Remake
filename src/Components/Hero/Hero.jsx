@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../Helmet/Helmet";
 import HeroSlider from "../../UI/HeroSlider/HeroSlider";
@@ -7,11 +8,20 @@ import ServicesList from "../../UI/ServiceList/ServiceList";
 import BecomeDriverSection from "../../UI/BecomeDriverSection/BecomeDriveSection";
 import Testimonial from "../../UI/Testimonial/Testimonial";
 import BlogList from "../../UI/BlogList/BlogList";
+import TalkJs from '../ChatBox/TalkJs';
+import { Modal } from 'antd';
+
+import ToggleMessage  from "../../assets/all-images/Animation - 1714750934802.gif";
 
 import "./Hero.css";
 
 const Hero = () => {
 
+  const [isTalkJsVisible, setIsTalkJsVisible] = useState(false);
+
+  const toggleTalkJs = () => {
+    setIsTalkJsVisible(prevState => !prevState);
+  };
 
   return (
     <Helmet title="Home">
@@ -50,7 +60,25 @@ const Hero = () => {
 
 
 
-
+  {/* Render TalkJs and other components */}
+    <div style={{ position: 'relative', backgroundColor: 'white' }}>
+          <img
+            src={ToggleMessage}
+            alt="Message Icon"
+            onClick={toggleTalkJs}
+            style={{ position: 'fixed', bottom: '100px', right: '20px', width: '120px', height: '120px', cursor: 'pointer', backgroundColor: 'transparent' }}
+          />
+          <Modal
+            title="Chat"
+            open={isTalkJsVisible}
+            onCancel={toggleTalkJs}
+            footer={null}
+            width={400}
+            style={{ top: 20 }}
+          >
+            <TalkJs />
+          </Modal>
+        </div>
 
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />

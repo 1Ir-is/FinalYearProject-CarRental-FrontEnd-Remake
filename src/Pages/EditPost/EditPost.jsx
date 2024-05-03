@@ -31,6 +31,8 @@ const EditPost = () => {
     fetchPostData();
   }, [postId]);
 
+  console.log(postData);
+
   const onFinish = async (values) => {
     setIsModalVisible(true);
     form.setFieldsValue(values);
@@ -42,8 +44,12 @@ const EditPost = () => {
   
     try {
       const values = await form.validateFields();
-      if (imageUrl) {
-        values.Image = imageUrl;
+      
+      // If no new image is uploaded, remove the 'Image' property from the values object
+      if (!imageUrl) {
+        delete values.Image;
+      } else {
+        values.Image = imageUrl; // Update the image URL if a new image is uploaded
       }
   
       // Send the update request immediately
@@ -57,7 +63,6 @@ const EditPost = () => {
       setConfirmLoading(false);
     }
   };
-  
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
@@ -116,12 +121,35 @@ const EditPost = () => {
           <Form.Item label="Description" name="description" rules={[{ required: true, message: 'Please input the description!' }]}>
             <Input.TextArea />
           </Form.Item>
-        <Form.Item label="Image" name="Image">
-            <div>
-              <input type="file" onChange={handleFileChange} />
-              {loading && <Spin />} {/* Display loading spinner while uploading image */}
-            </div>
-          </Form.Item>
+          <Form.Item label="Image" name="image">
+  <div>
+    {imageUrl || postData.image ? (
+      <div style={{ marginBottom: '8px' }}>
+        {postData.image && (
+          <div>
+            <img src={postData.image} alt="Post Image" style={{ maxWidth: '100%' }} />
+            <Button type="link" className="border border-gray-300 rounded px-4 mt-3 shadow" onClick={() => setPostData({...postData, image: ''})}>
+              Remove Image
+            </Button>
+          </div>
+        )}
+        {imageUrl && (
+          <div>
+            <img src={imageUrl} alt="Post Image" style={{ maxWidth: '100%' }} />
+            <Button type="link" className="border border-gray-300 rounded mt-3 px-4 shadow" onClick={() => setImageUrl('')}>
+              Remove Image
+            </Button>
+          </div>
+        )}
+      </div>
+    ) : (
+      <input type="file" onChange={handleFileChange} />
+    )}
+    {loading && <Spin />} {/* Display loading spinner while uploading image */}
+  </div>
+</Form.Item>
+
+
 
           <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Please select the category!' }]}>
             <Select>
