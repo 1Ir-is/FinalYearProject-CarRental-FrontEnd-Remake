@@ -34,7 +34,7 @@ const CreatePost = () => {
       setIsModalVisible(false);
       setLoading(false);
       form.resetFields();
-      navigate('/vehicle-post');
+      navigate('/owner/vehicle-post');
     } catch (error) {
       console.error('Error creating post:', error);
     }
