@@ -56,7 +56,7 @@ const EditPost = () => {
       const response = await axios.put(`https://localhost:7228/api/Owner/update-post/${postId}`, values);
       console.log(response.data);
       message.success('Post updated successfully!');
-      navigate('/vehicle-post');
+      navigate('/owner/vehicle-post');
     } catch (error) {
       console.error('Error updating post:', error);
     } finally {
