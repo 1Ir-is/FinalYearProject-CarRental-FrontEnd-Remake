@@ -1,18 +1,22 @@
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Route, useLocation } from "react-router-dom";
 import { useAuth } from "../Context/useAuth";
 
 type Props = { children: React.ReactNode };
 
-const ProtectedRoute = ({ children }: Props) => {
-  const location = useLocation();
+const ProtectedRoute = ({ ...props }) => {
   const { isLoggedIn } = useAuth();
-  return isLoggedIn() ? (
-    <>{children}</>
-  ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
-  );
+
+  // Redirect unauthenticated users to the login page
+  if (!isLoggedIn()) {
+    return <Navigate to="/auth/login" replace />;
+  }
+
+  // Render the protected route if the user is authenticated
+  return <Route {...props} />;
 };
+
+
 
 export default ProtectedRoute;
 
@@ -21,7 +25,6 @@ export const OwnerProtectedRoute = ({ children }: Props) => {
   const location = useLocation();
   const { isLoggedIn, user } = useAuth();
   const isOwner = user && user.role === 2; // Check if user is an owner
-  console.log(user?.role);
   return isLoggedIn() && isOwner ? (
     <>{children}</>
   ) : (

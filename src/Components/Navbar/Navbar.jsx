@@ -209,14 +209,14 @@ const Navbar = (props) => {
             {!isLoggedIn() && ( 
                 <div className="flex items-center">
                 <Link
-                  to="/login"
+                  to="/auth/login"
                   className="flex items-center gap-1 md:hidden no-underline text-white mr-4" 
                 >
                   <i className="ri-login-circle-line text-white"></i> 
                   Login 
                 </Link>
                 <Link
-                  to="/register"
+                  to="/auth/register"
                   className="flex items-center gap-1 md:hidden no-underline text-white" 
                 >
                   <i className="ri-user-line text-white"></i> 
