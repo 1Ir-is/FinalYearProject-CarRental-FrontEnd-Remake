@@ -9,7 +9,15 @@ const BookingForm = ({ submitHandler }) => {
   const [phone, setPhone] = useState('');
 
   const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
+    const selectedStartDate = e.target.value;
+    const currentDate = new Date().toISOString().slice(0, 16); // Get current date in "yyyy-mm-ddThh:mm" format
+
+    if (selectedStartDate < currentDate) {
+      message.warning('Start date cannot be earlier than the current date');
+      return;
+    }
+
+    setStartDate(selectedStartDate);
     // Clear date error when user selects a new start date
     setDateError('');
   };

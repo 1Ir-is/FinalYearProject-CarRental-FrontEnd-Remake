@@ -42,8 +42,6 @@ const CarDetails = () => {
   const indexOfFirstReview = indexOfLastReview - pageSize;
   const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
 
-  console.log(carDetails);
-
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -111,7 +109,7 @@ const CarDetails = () => {
     fetchReviews();
   
     // Set interval to refresh reviews every 5 seconds
-    const intervalId = setInterval(fetchReviews, 3000); // Adjust the interval as needed
+    const intervalId = setInterval(fetchReviews, 1500); // Adjust the interval as needed
   
     return () => clearInterval(intervalId); // Clear interval on component unmount
   }, [id]);
