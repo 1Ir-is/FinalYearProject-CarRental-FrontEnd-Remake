@@ -62,7 +62,7 @@ export const UserProvider = ({ children }: Props) => {
         setToken(null);
         setUser(null);
         message.success("Register Success!");
-        navigate("/login");
+        navigate("/auth/login");
       }
     } catch (error) {
       console.error("Error registering user:", error);
