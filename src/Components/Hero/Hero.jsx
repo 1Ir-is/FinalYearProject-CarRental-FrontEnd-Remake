@@ -10,12 +10,15 @@ import Testimonial from "../../UI/Testimonial/Testimonial";
 import BlogList from "../../UI/BlogList/BlogList";
 import TalkJs from '../ChatBox/TalkJs';
 import { Modal } from 'antd';
+import { useAuth } from '../../Context/useAuth';
 
 import ToggleMessage  from "../../assets/all-images/Animation - 1714750934802.gif";
 
 import "./Hero.css";
 
 const Hero = () => {
+
+  const { isLoggedIn } = useAuth();
 
   const [isTalkJsVisible, setIsTalkJsVisible] = useState(false);
 
@@ -60,8 +63,9 @@ const Hero = () => {
 
 
 
-  {/* Render TalkJs and other components */}
-    <div style={{ position: 'relative', backgroundColor: 'white' }}>
+   {/* Render TalkJs and other components only if user is logged in */}
+   {isLoggedIn() && (
+        <div style={{ position: 'relative', backgroundColor: 'white' }}>
           <img
             src={ToggleMessage}
             alt="Message Icon"
@@ -79,6 +83,7 @@ const Hero = () => {
             <TalkJs />
           </Modal>
         </div>
+      )}
 
       {/* =========== become a driver section ============ */}
       <BecomeDriverSection />

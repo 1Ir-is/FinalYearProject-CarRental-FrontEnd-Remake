@@ -57,10 +57,10 @@ export const router = createBrowserRouter([
       { path: "register-owner", element: <OwnerPage />},
 
       // For owner - Protected routes
-      { path: "vehicle-post", element: <VehiclePost /> },
-      { path: "create-post", element: <CreatePostPage /> },
-      { path: "edit-post/:postId", element: <EditPost /> },
-      { path: "rental-detail/:rentalId", element: <RentalDetail /> },
+      { path: "vehicle-post", element: <OwnerProtectedRoute><VehiclePost /></OwnerProtectedRoute> },
+      { path: "create-post", element: <OwnerProtectedRoute><CreatePostPage /></OwnerProtectedRoute> },
+      { path: "edit-post/:postId", element: <OwnerProtectedRoute><EditPost /></OwnerProtectedRoute> },
+      { path: "rental-detail/:rentalId", element: <OwnerProtectedRoute><RentalDetail /></OwnerProtectedRoute> },
       
      
       // 403 route

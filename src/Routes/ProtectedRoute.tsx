@@ -21,6 +21,7 @@ export const OwnerProtectedRoute = ({ children }: Props) => {
   const location = useLocation();
   const { isLoggedIn, user } = useAuth();
   const isOwner = user && user.role === 2; // Check if user is an owner
+  console.log(user?.role);
   return isLoggedIn() && isOwner ? (
     <>{children}</>
   ) : (
