@@ -79,7 +79,7 @@ const RentalDetail = () => {
   return (
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <hr className="mt-0 mb-4"/>
-      <Link to="/vehicle-post" className="btn btn-primary mb-3">Back</Link> 
+      <Link to="/owner/vehicle-post" className="btn btn-primary mb-3">Back</Link> 
       <div className="card shadow mb-4">
         <div className="card-header py-3">
             <h6 className="m-0 font-weight-bold text-primary">Renter List</h6>
