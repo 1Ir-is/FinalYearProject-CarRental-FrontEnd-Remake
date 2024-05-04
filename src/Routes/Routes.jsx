@@ -26,6 +26,7 @@ import ResetPasswordPage from "../Pages/ResetPassword/ResetPasswordPage";
 
 import { Navigate } from "react-router-dom";
 import RentalDetail from "../Pages/RenterList/RentalDetail";
+import NotFoundPage from "../Pages/NotFound/NotFoundPage";
 
 export const router = createBrowserRouter([
   {
@@ -65,7 +66,10 @@ export const router = createBrowserRouter([
      
       // 403 route
       { path: "access-denied", element: <ForbiddenPage /> },
-      { path: "*", element: <Navigate to="/access-denied" replace /> },
+
+      // 404 route
+      { path: "*", element: <Navigate to="/404" replace /> },
+      { path: "404", element: <NotFoundPage /> },
     ],
   },
 ]);
