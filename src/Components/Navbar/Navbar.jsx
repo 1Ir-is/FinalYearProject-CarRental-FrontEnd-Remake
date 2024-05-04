@@ -107,13 +107,13 @@ const Navbar = (props) => {
                 ) : (
                   <>
                     <Link
-                      to="/login"
+                      to="/auth/login"
                       className="d-flex align-items-center gap-1"
                     >
                       <i className="ri-login-circle-line"></i> Login
                     </Link>
                     <Link
-                      to="/register"
+                      to="/auth/register"
                       className="d-flex align-items-center gap-1"
                     >
                       <i className="ri-user-line"></i> Register

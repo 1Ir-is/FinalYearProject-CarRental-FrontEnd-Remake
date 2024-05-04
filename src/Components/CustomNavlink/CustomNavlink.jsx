@@ -35,7 +35,7 @@ const CustomNavLinks = () => {
             </NavLink>
             {/* Conditional rendering for owner */}
             {isOwner && (
-                <NavLink to="/vehicle-post" className="nav-link">
+                <NavLink to="/owner/vehicle-post" className="nav-link">
                     Vehicle Post
                 </NavLink>
             )}

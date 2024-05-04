@@ -54,7 +54,7 @@ const VehiclePost = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate loading delay
 
       // Navigate to the edit post page
-      navigate(`/edit-post/${record.id}`);
+      navigate(`/owner/edit-post/${record.id}`);
     } catch (error) {
       console.error('Error editing post:', error);
     } finally {
@@ -120,7 +120,7 @@ const VehiclePost = () => {
 
   const handleViewList = (record) => {
     // Navigate to the RentalDetail component with the postId as a URL parameter
-    navigate(`/rental-detail/${record.id}`);
+    navigate(`/owner/rental-detail/${record.id}`);
   };
   
 
@@ -263,7 +263,7 @@ const VehiclePost = () => {
     <div className="container-xl px-4 mt-5 mb-5" style={{ minHeight: '70vh' }}>
       <CustomNavLinks />
       <hr className="mt-0 mb-4" />
-      <Link to="/create-post" className="btn btn-info h3 mb-2">Create New Post</Link>
+      <Link to="/owner/create-post" className="btn btn-info h3 mb-2">Create New Post</Link>
       <div className="card shadow mb-4">
         <div className="card-header py-3">
           <h6 className="m-0 font-weight-bold text-primary">Vehicle List</h6>

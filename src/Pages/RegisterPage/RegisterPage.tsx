@@ -89,7 +89,7 @@ const RegisterPage = (props: Props) => {
                 <button type="submit" className="btn btn-primary w-100">Sign up</button>
               </form>
               <p className="text-center mt-3">
-                Already have an account? <Link to="/login">Sign in</Link>
+                Already have an account? <Link to="/auth/login">Sign in</Link>
               </p>
             </div>
           </Col>

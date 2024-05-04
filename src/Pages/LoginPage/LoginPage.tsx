@@ -112,7 +112,7 @@ const LoginPage = (props: Props) => {
               <button type="submit" className="btn btn-primary w-100">Sign in</button>
             </form>
             <p className="text-center mt-3">
-              Don’t have an account yet? <Link to="/register">Sign up</Link>
+              Don’t have an account yet? <Link to="/auth/register">Sign up</Link>
             </p>
 
             <div className="flex justify-center items-center">
