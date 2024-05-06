@@ -70,7 +70,7 @@ const Hero = () => {
             src={ToggleMessage}
             alt="Message Icon"
             onClick={toggleTalkJs}
-            style={{ position: 'fixed', bottom: '100px', right: '20px', width: '120px', height: '120px', cursor: 'pointer', backgroundColor: 'transparent' }}
+            style={{ position: 'fixed', bottom: '100px', right: '20px', width: '120px', height: '120px', cursor: 'pointer', backgroundColor: 'transparent', zIndex: 1000}}
           />
           <Modal
             title="Chat"

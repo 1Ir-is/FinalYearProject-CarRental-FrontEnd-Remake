@@ -7,6 +7,7 @@ import Talk from 'talkjs';
 function TalkJs() {
     const { user } = useAuth();
     console.log(user);
+
     useEffect(() => {
         if (user) {
             Talk.ready.then(() => {
