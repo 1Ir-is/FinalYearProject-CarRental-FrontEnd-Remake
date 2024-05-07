@@ -18,6 +18,8 @@ type UserContextType = {
   logout: () => void;
   isLoggedIn: () => boolean;
   setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  startLogoutTimer: () => void;
+  resetLogoutTimer: () => void;
 };
 
 type Props = { children: React.ReactNode };
@@ -29,6 +31,7 @@ export const UserProvider = ({ children }: Props) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [logoutTimer, setLogoutTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -96,9 +99,9 @@ export const UserProvider = ({ children }: Props) => {
       })
       .catch((e) => toast.warning("Server error occurred"));
   };
-
+  
   const loginUserGoogle = async (email: string) => {
-    try {
+    try {   
       const res = await loginAPIGoogle(email);
       if (res) {
         cacheUserData(res.data.token, res.data);
@@ -167,7 +170,20 @@ export const UserProvider = ({ children }: Props) => {
     localStorage.removeItem("user");
     setUser(null);
     setToken("");
+    clearTimeout(logoutTimer!);
     navigate("/");
+  };
+
+  const startLogoutTimer = () => {
+    const timer = setTimeout(logout, 30 * 60 * 1000); // 30 minutes
+    setLogoutTimer(timer);
+  };
+
+  const resetLogoutTimer = () => {
+    if (logoutTimer) {
+      clearTimeout(logoutTimer);
+      startLogoutTimer();
+    }
   };
 
   return (
@@ -182,6 +198,8 @@ export const UserProvider = ({ children }: Props) => {
         isLoggedIn,
         setUser,
         loginUserGoogle,
+        startLogoutTimer,
+        resetLogoutTimer,
       }}
     >
       {isReady ? children : null}
