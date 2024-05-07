@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import * as Yup from "yup";
-import bcrypt from "bcryptjs";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../Context/useAuth";
 import { useForm } from "react-hook-form";
@@ -27,20 +27,28 @@ const validation = Yup.object().shape({
     ),
 });
 
-
-
 const LoginPage = (props: Props) => {
-  const { loginUser, loginUserGoogle } = useAuth();
+  const { loginUser, loginUserGoogle, logout } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormsInputs>({ resolver: yupResolver(validation) });
 
+  // Hàm logout khi hết thời gian không hoạt động
+  const startLogoutTimer = () => {
+    setTimeout(() => {
+      logout();
+    }, 30 * 60 * 1000); // 30 phút
+  };
+
+  useEffect(() => {
+    startLogoutTimer(); // Bắt đầu hẹn giờ logout khi component mount
+  }, []); // Chỉ chạy một lần khi component mount
+
   const handleLogin = (form: LoginFormsInputs) => {
     loginUser(form.Email, form.password);
   };
-
 
   const handleGoogleLoginSuccess = async (credentialResponse: any) => {
     const token = credentialResponse.credential;
